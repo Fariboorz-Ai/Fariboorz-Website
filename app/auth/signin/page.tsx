@@ -21,6 +21,7 @@ interface Inputs {
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const session = useSession();
   const {
     register,
@@ -30,6 +31,7 @@ const SignIn = () => {
   const router = useRouter();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
+    setErrorMessage(null);
     try {
       const result = await signIn("credentials", {
         email: data.email,
@@ -37,14 +39,14 @@ const SignIn = () => {
         redirect: false,
       });
       if (!result?.ok) {
-        console.error(result?.error || "Error signing in. Please try again.");
+       
+        setErrorMessage(result?.error || "Invalid email or password.");
       } else {
-        console.log("Sign in successful");
         router.push("/dashboard");
       }
       await new Promise(resolve => setTimeout(resolve, 1000));
     } catch (error) {
-      console.error(error);
+      setErrorMessage("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -94,6 +96,16 @@ const SignIn = () => {
           </CardHeader>
           
           <CardContent className="space-y-6">
+            {/* Error message display */}
+            {errorMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+             className="mx-auto mb-3 flex max-w-md items-center gap-2 rounded-lg border border-destructive/30 bg-gradient-red p-3 text-sm text-destructive-foreground shadow-md animate-pulse-red"
+              >
+                {errorMessage}
+              </motion.div>
+            )}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           
               <motion.div
@@ -131,8 +143,7 @@ const SignIn = () => {
                   </motion.p>
                 )}
               </motion.div>
-
-          
+            
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -175,8 +186,7 @@ const SignIn = () => {
                   </motion.p>
                 )}
               </motion.div>
-
-    
+             
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -191,8 +201,7 @@ const SignIn = () => {
                   Forgot password?
                 </Link>
               </motion.div>
-
-           
+          
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -213,6 +222,7 @@ const SignIn = () => {
                   )}
                 </Button>
               </motion.div>
+         
             </form>
 
          
