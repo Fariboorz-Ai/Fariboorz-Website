@@ -1,0 +1,96 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { cn } from "@/utils/utils";
+import Icon from "./Icon";
+
+const navItems = [
+  { href: "/dashboard", label: "Overview", icon: "mdi:view-dashboard" },
+  { href: "/dashboard/trades", label: "Trades History", icon: "mdi:history" },
+  { href: "/dashboard/notifications", label: "Notifications", icon: "mdi:bell" },
+  { href: "/dashboard/setting", label: "Settings", icon: "mdi:cog" },
+];
+
+export default function Sidebar() {
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  return (
+    <>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed md:hidden z-50 top-4 right-4 p-2 bg-card/80 backdrop-blur rounded-lg border shadow-lg"
+      >
+        {isOpen ? <Icon icon="mdi:close" className="w-6 h-6" /> : <Icon icon="mdi:menu" className="w-6 h-6" />}
+      </button>
+
+      <motion.aside
+        initial={{ x: isMobile ? -300 : 0 }}
+        animate={{ x: isOpen ? 0 : isMobile ? -300 : 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className={cn(
+          "fixed top-0 left-0 h-screen w-64 bg-card/90 backdrop-blur-xl border-r shadow-2xl",
+          "md:translate-x-0 z-[60]"
+        )}
+      >
+        <div className="p-6 flex items-center gap-3 border-b">
+          <div className="w-8 h-8 bg-red-600 rounded-full animate-pulse" />
+          <h1 className="text-xl font-bold bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
+            Fariboorz
+          </h1>
+        </div>
+
+        <nav className="p-4 flex flex-col gap-2">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                "flex items-center gap-3 p-3 rounded-xl transition-all",
+                "hover:bg-red-500/10 hover:text-red-600",
+                pathname === item.href && "bg-red-500/10 text-red-600 font-semibold"
+              )}
+            >
+              <Icon icon={item.icon} className="w-5 h-5" />
+              <span>{item.label}</span>
+            </Link>
+          ))}
+        </nav>
+
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t">
+          <button
+            onClick={() => {
+               console.log("Logout clicked");
+            }}
+            className="flex items-center gap-3 p-3 rounded-xl transition-all w-full hover:bg-red-500/10 hover:text-red-600 text-muted-foreground"
+          >
+            <Icon icon="mdi:logout" className="w-5 h-5" />
+            <span>Logout</span>
+          </button>
+        </div>
+      </motion.aside>
+
+      {isOpen && isMobile && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 z-50 md:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+    </>
+  );
+}
