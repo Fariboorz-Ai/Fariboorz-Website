@@ -99,7 +99,7 @@ export default async function DashboardPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-white">Welcome back, {data.user?.name}</h1>
-            <p className="text-gray-400 mt-1">Here's what's happening with your trading today</p>
+            <p className="text-gray-400 mt-1">Here&apos;s what&apos;s happening with your trading today</p>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 rounded-lg border border-gray-700">
@@ -285,7 +285,7 @@ export default async function DashboardPage() {
                   <div className="text-center py-8 text-gray-400">
                     <Icon icon="mdi:bell-off" className="w-12 h-12 mx-auto mb-2 opacity-50" />
                     <p>No notifications</p>
-                    <p className="text-sm">You're all caught up!</p>
+                    <p className="text-sm">You&apos;re all caught up!</p>
                   </div>
                 )}
               </div>

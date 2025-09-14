@@ -96,7 +96,6 @@ const SignIn = () => {
           </CardHeader>
           
           <CardContent className="space-y-6">
-            {/* Error message display */}
             {errorMessage && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -249,7 +248,7 @@ const SignIn = () => {
               transition={{ delay: 0.9, duration: 0.5 }}
               className="text-center text-sm"
             >
-              <span className="text-muted-foreground">Don't have an account? </span>
+              <span className="text-muted-foreground">Don&apos;t have an account?</span>
               <Link href="/auth/signup" className="text-red-600 hover:text-red-500 font-medium transition-colors">
                 Sign up
               </Link>

@@ -95,7 +95,7 @@ export default function CookieConsent({ onAccept, onDecline }: CookieConsentProp
                   </div>
                   <p className="text-sm text-muted-foreground">
                     We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic.
-                    By clicking "Accept All", you consent to our use of cookies.
+                    By clicking &apos;Accept All&apos;, you consent to our use of cookies.
                   </p>
                 </div>
 

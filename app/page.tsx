@@ -313,7 +313,7 @@ export default function Home() {
                           <BsStarFill key={i} className="text-yellow-500 text-sm" />
                         ))}
                       </div>
-                      <p className="text-muted-foreground mb-6 leading-relaxed">"{testimonial.content}"</p>
+                      <p className="text-muted-foreground mb-6 leading-relaxed">&apos;{testimonial.content}&apos;</p>
                       <div className="flex items-center gap-3">
                         <Image
                           src={testimonial.avatar}

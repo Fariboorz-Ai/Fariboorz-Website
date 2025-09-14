@@ -254,7 +254,7 @@ export default async function NotificationsPage() {
                           <div className="flex flex-col items-center gap-2">
                             <Icon icon="mdi:bell-off" className="w-12 h-12 text-gray-500" />
                             <p className="text-gray-400">No notifications found</p>
-                            <p className="text-sm text-gray-500">You're all caught up!</p>
+                            <p className="text-sm text-gray-500">You&apos;re all caught up!</p>
                           </div>
                         </TableCell>
                       </TableRow>
