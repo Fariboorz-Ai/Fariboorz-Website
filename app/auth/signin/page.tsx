@@ -82,7 +82,7 @@ const SignIn = () => {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent mb-2">
             Welcome Back
           </h1>
-          <p className="text-muted-foreground">Sign in to your Fariboorz account</p>
+          <p className=" text-primary">Sign in to your Fariboorz account</p>
         </motion.div>
 
         <Card className="bg-card/80 backdrop-blur-xl border border-border/50 shadow-2xl">
@@ -122,7 +122,7 @@ const SignIn = () => {
                     id="email"
                     type="email"
                     placeholder="Enter your email"
-                    className="pl-10 bg-background/50 border-border/50 focus:border-red-600/50 focus:ring-red-600/20 transition-all duration-300"
+                    className="pl-10 bg-background/50 border-border/50 focus:border-red-600/50 focus:ring-red-600/20 transition-all text-foreground duration-300"
                     {...register("email", {
                       required: "Email is required",
                       pattern: {
@@ -158,7 +158,7 @@ const SignIn = () => {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
-                    className="pl-10 pr-10 bg-background/50 border-border/50 focus:border-red-600/50 focus:ring-red-600/20 transition-all duration-300"
+                    className="pl-10 pr-10 bg-background/50 border-border/50 focus:border-red-600/50 focus:ring-red-600/20 transition-all text-foreground duration-300"
                     {...register("password", {
                       required: "Password is required",
                       minLength: {

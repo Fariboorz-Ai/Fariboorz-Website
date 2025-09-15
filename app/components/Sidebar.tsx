@@ -30,7 +30,8 @@ export default function Sidebar() {
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed md:hidden z-50 top-4 right-4 p-2 bg-card/80 backdrop-blur rounded-lg border shadow-lg"
+        className="fixed md:hidden z-50 top-4 right-4 p-2 bg-background/80 backdrop-blur rounded-lg border shadow-lg text-foreground"
+        aria-label={isOpen ? "Close sidebar" : "Open sidebar"}
       >
         {isOpen ? <Icon icon="mdi:close" className="w-6 h-6" /> : <Icon icon="mdi:menu" className="w-6 h-6" />}
       </button>
@@ -40,12 +41,12 @@ export default function Sidebar() {
         animate={{ x: isOpen ? 0 : isMobile ? -300 : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         className={cn(
-          "fixed top-0 left-0 h-screen w-64 bg-card/90 backdrop-blur-xl border-r shadow-2xl",
+          "fixed top-0 left-0 h-screen w-64 bg-background/95 backdrop-blur-xl border-r border-border shadow-2xl text-foreground",
           "md:translate-x-0 z-[60]"
         )}
       >
-        <div className="p-6 flex items-center gap-3 border-b">
-          <div className="w-8 h-8 bg-red-600 rounded-full animate-pulse" />
+        <div className="p-6 flex items-center gap-3 border-b border-border">
+          <div className="w-8 h-8 bg-gradient-to-br from-red-600 to-red-700 rounded-full animate-pulse" />
           <h1 className="text-xl font-bold bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
             Fariboorz
           </h1>
@@ -59,22 +60,24 @@ export default function Sidebar() {
               onClick={() => setIsOpen(false)}
               className={cn(
                 "flex items-center gap-3 p-3 rounded-xl transition-all",
-                "hover:bg-red-500/10 hover:text-red-600",
-                pathname === item.href && "bg-red-500/10 text-red-600 font-semibold"
+                "hover:bg-red-600/10 hover:text-red-700 focus:bg-red-600/10 focus:text-red-700",
+                pathname === item.href
+                  ? "bg-red-600/10 text-red-700 font-semibold"
+                  : "text-foreground"
               )}
             >
-              <Icon icon={item.icon} className="w-5 h-5" />
+              <Icon icon={item.icon} className={cn("w-5 h-5", pathname === item.href ? "text-red-700" : "text-foreground")} />
               <span>{item.label}</span>
             </Link>
           ))}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border">
           <button
             onClick={() => {
                console.log("Logout clicked");
             }}
-            className="flex items-center gap-3 p-3 rounded-xl transition-all w-full hover:bg-red-500/10 hover:text-red-600 text-muted-foreground"
+            className="flex items-center gap-3 p-3 rounded-xl transition-all w-full hover:bg-red-600/10 hover:text-red-700 text-foreground"
           >
             <Icon icon="mdi:logout" className="w-5 h-5" />
             <span>Logout</span>
