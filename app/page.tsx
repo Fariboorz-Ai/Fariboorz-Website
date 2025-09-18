@@ -28,6 +28,7 @@ import CookieConsent from "./components/CookieConsent";
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
+  
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
@@ -211,13 +212,14 @@ export default function Home() {
                 
                   <div className="relative bg-gradient-to-br from-red-600/20 via-red-500/20 to-red-700/20 rounded-3xl p-1 shadow-2xl">
                     <div className="bg-background/80 backdrop-blur-xl rounded-3xl p-8 aspect-square flex items-center justify-center relative overflow-hidden">
-                      <Image 
-                        src="/images/landing_banner.jpg"
-                        className="relative z-10 w-full h-auto rounded-2xl" 
+                      <Image
+                       src="/images/hero-light.png"
+                       className="relative z-10 w-full h-auto rounded-2xl"
                         width={500}
                         height={500}
-                        alt="Advanced Trading Platform" 
-                      />
+                        alt="Fariboorz AI Light"
+                       />
+                   
                     </div>
                   </div>
                 </div>
@@ -279,62 +281,7 @@ export default function Home() {
         {/* <PricingSection /> */}
 
 
-        <section className="py-24 bg-gradient-to-br from-red-600/5 via-red-500/5 to-red-700/5 relative">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-                Trusted by <span className="bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">Thousands</span>
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Join thousands of traders who have transformed their trading with Fariboorz
-              </p>
-            </motion.div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {testimonials.map((testimonial, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.2, duration: 0.8 }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -5 }}
-                >
-                  <Card className="bg-card/80 backdrop-blur-xl border border-border/50 hover:border-red-600/30 transition-all duration-300 h-full">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-1 mb-4">
-                        {[...Array(testimonial.rating)].map((_, i) => (
-                          <BsStarFill key={i} className="text-yellow-500 text-sm" />
-                        ))}
-                      </div>
-                      <p className="text-muted-foreground mb-6 leading-relaxed">&apos;{testimonial.content}&apos;</p>
-                      <div className="flex items-center gap-3">
-                        <Image
-                          src={testimonial.avatar}
-                          alt={testimonial.name}
-                          width={48}
-                          height={48}
-                          className="rounded-full"
-                        />
-                        <div>
-                          <div className="font-semibold text-foreground">{testimonial.name}</div>
-                          <div className="text-sm text-muted-foreground">{testimonial.role}</div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-      
+    
 
       </div>
       <FloatingActionButton />

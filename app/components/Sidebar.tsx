@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/utils/utils";
 import Icon from "./Icon";
+import Image from "next/image";
 
 const navItems = [
   { href: "/dashboard", label: "Overview", icon: "mdi:view-dashboard" },
@@ -46,9 +47,9 @@ export default function Sidebar() {
         )}
       >
         <div className="p-6 flex items-center gap-3 border-b border-border">
-          <div className="w-8 h-8 bg-gradient-to-br from-red-600 to-red-700 rounded-full animate-pulse" />
+           <Image src="/images/ICO.png" alt="Fariboorz" className="text-2xl lg:text-3xl text-white" width={64} height={64} />
           <h1 className="text-xl font-bold bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
-            Fariboorz
+            Dashbaord
           </h1>
         </div>
 

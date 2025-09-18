@@ -1,4 +1,10 @@
+
+<img src="./public/images/ICO.png" alt="Fariboorz ICO" style= "width: 240px; height: 240px;  display: block; margin-left: auto; margin-right: auto;">
+
 # Fariboorz AI - Advanced Autonomous Trading Bot
+
+
+
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-green.svg)

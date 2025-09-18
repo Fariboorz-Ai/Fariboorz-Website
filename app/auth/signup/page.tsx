@@ -7,7 +7,7 @@ import { Button } from "@/app/components/ui/Button";
 import { Input } from "@/app/components/ui/Input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/Card";
 import Link from "next/link";
-import Icon from "@/app/components/Icon";
+import Image from "next/image";
 import { signup } from "./actions";
 
 const Signup = () => {
@@ -58,16 +58,14 @@ const Signup = () => {
         >
           <div className="flex justify-center mb-4">
             <div className="relative">
-              <div className="w-16 h-16 bg-gradient-to-br from-red-600 via-red-500 to-red-700 rounded-2xl flex items-center justify-center shadow-2xl">
-                <Icon icon="tabler:flame-filled" className="text-3xl text-white" />
-              </div>
+               <Image src="/images/ICO.png" alt="Fariboorz" className="text-2xl lg:text-3xl text-white" width={128} height={128} />
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-red-500/20 to-red-600/20 blur-xl opacity-50" />
             </div>
           </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent mb-2">
             Join Fariboorz
           </h1>
-          <p className="text-muted-foreground">Create your account and start trading</p>
+          <p className="text-primary">Create your account and start trading</p>
         </motion.div>
 
         <Card className="bg-card/80 backdrop-blur-xl border border-border/50 shadow-2xl">
@@ -205,11 +203,11 @@ const Signup = () => {
                 />
                 <label htmlFor="terms" className="text-muted-foreground cursor-pointer">
                   I agree to the{" "}
-                  <Link href="/terms" className="text-red-600 hover:text-red-500 transition-colors">
+                  <Link href="/terms-privacy" className="text-red-600 hover:text-red-500 transition-colors">
                     Terms of Service
                   </Link>{" "}
                   and{" "}
-                  <Link href="/privacy" className="text-red-600 hover:text-red-500 transition-colors">
+                  <Link href="/terms-privacy" className="text-red-600 hover:text-red-500 transition-colors">
                     Privacy Policy
                   </Link>
                 </label>

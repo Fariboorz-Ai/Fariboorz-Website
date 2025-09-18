@@ -2,32 +2,27 @@ import Link from "next/link";
 import { Button } from "./components/ui/Button";
 import Icon from "./components/Icon";
 import { motion } from "framer-motion";
-
+import Image from "next/image";
 export default function Footer() {
   const footerLinks = {
     product: [
       { name: "Features", href: "#features" },
       { name: "Pricing", href: "#pricing" },
-
-      { name: "Documentation", href: "#docs" },
     ],
     support: [
-      { name: "Help Center", href: "#help" },
-      { name: "Community", href: "#community" },
       { name: "Status", href: "#status" },
       { name: "Security", href: "#security" },
     ],
     legal: [
-      { name: "Privacy Policy", href: "#privacy" },
-      { name: "Terms of Service", href: "#terms" },
+      { name: "Privacy Policy", href: "/terms-privacy" },
+      { name: "Terms of Service", href: "/terms-privacy" },
     ],
   };
 
   const socialLinks = [
-    { name: "GitHub", icon: "mdi:github", href: "#" },
-    { name: "Telegram", icon: "mdi:telegram", href: "#" },
-    { name: "Twitter", icon: "mdi:twitter", href: "#" },
-    { name: "LinkedIn", icon: "mdi:linkedin", href: "#" },
+    { name: "GitHub", icon: "mdi:github", href: "https://github.com/Fariboorz-ai" },
+    { name: "Telegram", icon: "mdi:telegram", href: "https://t.me/Fariboorz_ai" },
+
   ];
 
   return (
@@ -49,9 +44,9 @@ export default function Footer() {
             >
               <Link href="/" className="flex items-center gap-3 mb-6 group">
                 <div className="relative">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 via-red-500 to-red-700 flex items-center justify-center shadow-lg group-hover:shadow-red-500/25 transition-all duration-300">
-                    <Icon icon="tabler:flame-filled" className="text-2xl text-white" />
-                  </div>
+                 
+                   <Image src="/images/ICO.png" alt="Fariboorz" className="text-2xl lg:text-3xl text-white" width={64} height={64} />
+                
                   <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-red-500/20 to-red-600/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
                 <div className="flex flex-col">

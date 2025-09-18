@@ -10,7 +10,7 @@ import { Button } from "@/app/components/ui/Button";
 import { Input } from "@/app/components/ui/Input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/Card";
 import Link from "next/link";
-import  Icon  from "@/app/components/Icon";
+import Image from "next/image";
 
 
 interface Inputs {
@@ -73,9 +73,7 @@ const SignIn = () => {
         >
           <div className="flex justify-center mb-4">
             <div className="relative">
-              <div className="w-16 h-16 bg-gradient-to-br from-red-600 via-red-500 to-red-700 rounded-2xl flex items-center justify-center shadow-2xl">
-                <Icon icon="tabler:flame-filled" className="text-3xl text-white" />
-              </div>
+               <Image src="/images/ICO.png" alt="Fariboorz" className="text-2xl lg:text-3xl text-white" width={128} height={128} />
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-red-500/20 to-red-600/20 blur-xl opacity-50" />
             </div>
           </div>
