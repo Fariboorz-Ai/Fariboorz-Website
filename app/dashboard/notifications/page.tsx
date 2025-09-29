@@ -1,3 +1,4 @@
+
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/utils/authOptions";
 import { connectDB } from "@/app/db";
@@ -7,49 +8,73 @@ import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Ca
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '../../components/ui/Table';
 import Icon from '../../components/Icon';
 import { redirect } from "next/navigation";
+import Link from 'next/link';
 
-async function getNotificationsData(userId: string) {
+import MarkAsReadButton from "./MarkAsReadButton";
+
+
+async function getNotificationsData(userId: string, page = 1, perPage = 10) {
   await connectDB();
-  
+
+  const skip = (page - 1) * perPage;
+
 
   const notifications = await notificationModel
     .find({ userId })
     .sort({ createdAt: -1 })
-    .limit(50); 
-  
+    .skip(skip)
+    .limit(perPage);
 
-  const totalNotifications = notifications.length;
-  const unreadNotifications = notifications.filter(n => !n.isRead).length;
+  const [totalNotifications, unreadNotifications, tradeCount, signalCount, systemCount, alertCount, customCount] = await Promise.all([
+    notificationModel.countDocuments({ userId }),
+    notificationModel.countDocuments({ userId, isRead: false }),
+    notificationModel.countDocuments({ userId, type: 'trade' }),
+    notificationModel.countDocuments({ userId, type: 'signal' }),
+    notificationModel.countDocuments({ userId, type: 'system' }),
+    notificationModel.countDocuments({ userId, type: 'alert' }),
+    notificationModel.countDocuments({ userId, type: 'custom' }),
+  ]);
+
   const readNotifications = totalNotifications - unreadNotifications;
-  
 
   const typeCounts = {
-    trade: notifications.filter(n => n.type === 'trade').length,
-    signal: notifications.filter(n => n.type === 'signal').length,
-    system: notifications.filter(n => n.type === 'system').length,
-    alert: notifications.filter(n => n.type === 'alert').length,
-    custom: notifications.filter(n => n.type === 'custom').length,
+    trade: tradeCount,
+    signal: signalCount,
+    system: systemCount,
+    alert: alertCount,
+    custom: customCount,
   };
-  
+
+  const totalPages = Math.max(1, Math.ceil(totalNotifications / perPage));
+
   return {
     notifications,
     stats: {
       total: totalNotifications,
       unread: unreadNotifications,
       read: readNotifications,
-      typeCounts
-    }
+      typeCounts,
+    },
+    pagination: {
+      page,
+      perPage,
+      totalPages,
+      total: totalNotifications,
+    },
   };
 }
 
-export default async function NotificationsPage() {
+export default async function NotificationsPage({ searchParams }: { searchParams?: { page?: string } }) {
   const session = await getServerSession(authOptions);
-  
+
   if (!session?.user?.id) {
     redirect('/auth/signin');
   }
   
-  const data = await getNotificationsData(session.user.id);
+  const params = await searchParams;
+  const page = parseInt(params?.page ?? '1', 10) || 1;
+  const perPage = 10;
+  const data = await getNotificationsData(session.user.id, page, perPage);
   
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -124,6 +149,7 @@ export default async function NotificationsPage() {
     return formatDate(date);
   };
 
+
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
       <Sidebar />
@@ -188,16 +214,15 @@ export default async function NotificationsPage() {
                       <TableHead className="text-gray-300 font-medium">Message</TableHead>
                       <TableHead className="text-gray-300 font-medium">Time</TableHead>
                       <TableHead className="text-gray-300 font-medium">Status</TableHead>
+                      <TableHead className="text-gray-300 font-medium">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {data.notifications.length > 0 ? (
-                      data.notifications.map((notification) => (
+                      data.notifications.map((notification: any) => (
                         <TableRow 
                           key={notification._id.toString()} 
-                          className={`border-gray-700/30 hover:bg-gray-700/20 transition-all ${
-                            !notification.isRead ? 'bg-red-500/5' : ''
-                          }`}
+                          className={`border-gray-700/30 hover:bg-gray-700/20 transition-all ${!notification.isRead ? 'bg-red-500/5' : ''}`}
                         >
                           <TableCell>
                             <div className="flex items-center gap-2">
@@ -210,6 +235,7 @@ export default async function NotificationsPage() {
                               </span>
                             </div>
                           </TableCell>
+
                           <TableCell className="max-w-xs">
                             <div className="flex items-start gap-3">
                               {!notification.isRead && (
@@ -220,17 +246,20 @@ export default async function NotificationsPage() {
                               </p>
                             </div>
                           </TableCell>
+
                           <TableCell className="max-w-md">
                             <p className={`text-sm ${notification.isRead ? 'text-gray-400' : 'text-white'}`}>
                               {notification.message}
                             </p>
                           </TableCell>
+
                           <TableCell className="text-gray-400 text-sm">
                             <div className="flex flex-col">
                               <span>{getRelativeTime(notification.createdAt)}</span>
                               <span className="text-xs text-gray-500">{formatDate(notification.createdAt)}</span>
                             </div>
                           </TableCell>
+
                           <TableCell>
                             <div className="flex items-center gap-2">
                               {notification.isRead ? (
@@ -246,11 +275,23 @@ export default async function NotificationsPage() {
                               )}
                             </div>
                           </TableCell>
+
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              {notification.isRead ? (
+                                <button className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-sm rounded-lg transition-all text-white">
+                                 Read
+                                </button>
+                              ) : (
+                                 <MarkAsReadButton id={notification._id.toString()} />
+                              )}
+                            </div>
+                          </TableCell>
                         </TableRow>
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center py-8">
+                        <TableCell colSpan={6} className="text-center py-8">
                           <div className="flex flex-col items-center gap-2">
                             <Icon icon="mdi:bell-off" className="w-12 h-12 text-gray-500" />
                             <p className="text-gray-400">No notifications found</p>
@@ -265,6 +306,32 @@ export default async function NotificationsPage() {
             </CardContent>
           </Card>
         </div>
+
+              <div className="flex items-center justify-between px-2">
+                <div className="text-sm text-gray-400">Showing page {data.pagination.page} of {data.pagination.totalPages} — {data.pagination.total} total</div>
+                <div className="flex items-center gap-2">
+                  <Link href={`?page=${Math.max(1, data.pagination.page - 1)}`} className={`px-3 py-1 rounded-lg text-sm ${data.pagination.page === 1 ? 'bg-gray-700/30 text-gray-500 pointer-events-none' : 'bg-gray-800/50 text-white hover:bg-gray-700/60'}`}>
+                    Prev
+                  </Link>
+           
+                  {(() => {
+                    const pages = [] as number[];
+                    const total = data.pagination.totalPages;
+                    const current = data.pagination.page;
+                    const start = Math.max(1, current - 2);
+                    const end = Math.min(total, current + 2);
+                    for (let p = start; p <= end; p++) pages.push(p);
+                    return pages.map((p) => (
+                      <Link key={p} href={`?page=${p}`} className={`px-3 py-1 rounded-lg text-sm ${p === current ? 'bg-red-600 text-white' : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/60'}`}>
+                        {p}
+                      </Link>
+                    ));
+                  })()}
+                  <Link href={`?page=${Math.min(data.pagination.totalPages, data.pagination.page + 1)}`} className={`px-3 py-1 rounded-lg text-sm ${data.pagination.page === data.pagination.totalPages ? 'bg-gray-700/30 text-gray-500 pointer-events-none' : 'bg-gray-800/50 text-white hover:bg-gray-700/60'}`}>
+                    Next
+                  </Link>
+                </div>
+              </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="bg-gradient-to-br from-blue-900/50 to-blue-800/30 backdrop-blur border border-blue-700/50">
