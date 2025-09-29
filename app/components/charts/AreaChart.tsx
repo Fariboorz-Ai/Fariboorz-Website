@@ -1,4 +1,3 @@
-// components/charts/AreaChart.tsx
 "use client";
 
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';

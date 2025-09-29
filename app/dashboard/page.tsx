@@ -49,7 +49,7 @@ async function getDashboardData(userId: string) {
     const dayProfit = dayTrades.reduce((sum, trade) => sum + (trade.profitLoss || 0), 0);
     portfolioData.push({
       date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      value: Math.max(0, 10000 + dayProfit) // Base value + daily profit
+      value: Math.max(0, 10000 + dayProfit)
     });
   }
   

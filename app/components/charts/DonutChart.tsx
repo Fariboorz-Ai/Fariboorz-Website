@@ -1,4 +1,3 @@
-// components/charts/DonutChart.tsx
 "use client";
 
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
