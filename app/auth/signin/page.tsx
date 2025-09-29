@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter , redirect} from "next/navigation";
 import { motion } from "framer-motion";
 import { BsEye, BsEyeSlash, BsEnvelope, BsLock } from "react-icons/bs";
 import { Button } from "@/app/components/ui/Button";
@@ -42,7 +42,7 @@ const SignIn = () => {
        
         setErrorMessage(result?.error || "Invalid email or password.");
       } else {
-        router.push("/dashboard");
+         redirect('/auth/signin');
       }
       await new Promise(resolve => setTimeout(resolve, 1000));
     } catch (error) {
@@ -51,6 +51,11 @@ const SignIn = () => {
       setIsLoading(false);
     }
   };
+  
+  if(session?.data?.user){
+    redirect('/auth/signin');
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center p-4">

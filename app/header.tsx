@@ -6,12 +6,13 @@ import { FiChevronRight, FiMoon, FiSun, FiMenu, FiX, FiArrowRight } from "react-
 import { Button } from "./components/ui/Button";
 import Icon from "./components/Icon";
 import Image from "next/image";
+import LoginButton from "./LoginButton";
 
 export default function Header() {
   const [theme, setTheme] = useState<string>("light");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  let Username; 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
@@ -44,7 +45,7 @@ export default function Header() {
     { name: "Pricing", href: "#pricing" },
     { name: "About", href: "#about" },
   ];
-
+ 
   return (
     <>
       <motion.header 
@@ -145,22 +146,8 @@ export default function Header() {
                   </AnimatePresence>
                   <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-red-600/10 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </motion.button>
-
-              
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Link href="/auth/signin">
-                    <Button className="relative overflow-hidden bg-gradient-to-r from-red-600 to-red-700 hover:from-red-600/90 hover:to-red-700/90 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-red-500/25 transition-all duration-300 group">
-                      <span className="relative z-10 flex items-center gap-2">
-                        Access Platform
-                        <FiChevronRight className="group-hover:translate-x-1 transition-transform duration-200" />
-                      </span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-700/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </Button>
-                  </Link>
-                </motion.div>
+ 
+                      <LoginButton />
               </div>
             </div>
 
@@ -269,22 +256,7 @@ export default function Header() {
                   </button>
                 </motion.div>
 
-             
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.3 }}
-                  className="pt-4 border-t border-border/50"
-                >
-                  <Link href="/auth/signin" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-600/90 hover:to-red-700/90 text-white py-3 rounded-xl font-medium shadow-lg hover:shadow-red-500/25 transition-all duration-300 group">
-                      <span className="flex items-center justify-center gap-2">
-                        Access Platform
-                        <FiArrowRight className="group-hover:translate-x-1 transition-transform duration-200" />
-                      </span>
-                    </Button>
-                  </Link>
-                </motion.div>
+                <LoginButton />
               </div>
             </motion.div>
           )}

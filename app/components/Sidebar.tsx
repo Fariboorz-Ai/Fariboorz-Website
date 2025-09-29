@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { usePathname } from "next/navigation";
+import { usePathname , redirect } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/utils/utils";
 import Icon from "./Icon";
 import Image from "next/image";
+import { getSession, signOut } from "next-auth/react";
 
 const navItems = [
   { href: "/dashboard", label: "Overview", icon: "mdi:view-dashboard" },
@@ -26,6 +27,16 @@ export default function Sidebar() {
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
+  const Logout = async () => {
+    try {
+      setIsOpen(false);
+      await signOut({ callbackUrl: '/auth/signin' });
+    } catch (error) {
+      console.error('Error signing out:', error);
+
+      redirect('/auth/signin');
+    }
+  };
 
   return (
     <>
@@ -76,7 +87,7 @@ export default function Sidebar() {
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border">
           <button
             onClick={() => {
-               console.log("Logout clicked");
+              Logout();
             }}
             className="flex items-center gap-3 p-3 rounded-xl transition-all w-full hover:bg-red-600/10 hover:text-red-700 text-foreground"
           >
