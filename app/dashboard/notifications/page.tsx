@@ -64,15 +64,15 @@ async function getNotificationsData(userId: string, page = 1, perPage = 10) {
   };
 }
 
-export default async function NotificationsPage({ searchParams }: { searchParams?: { page?: string } }) {
+export default async function NotificationsPage(props: any) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
     redirect('/auth/signin');
   }
   
-  const params = await searchParams;
-  const page = parseInt(params?.page ?? '1', 10) || 1;
+  const params = props?.searchParams;
+  const page = parseInt((Array.isArray(params?.page) ? params?.page[0] : params?.page) ?? '1', 10) || 1;
   const perPage = 10;
   const data = await getNotificationsData(session.user.id, page, perPage);
   
