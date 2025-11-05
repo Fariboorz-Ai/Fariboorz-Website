@@ -57,7 +57,7 @@ export default function AnalyticsPage() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-foreground">
+  <div className="flex min-h-screen bg-background text-foreground">
       <Sidebar />
 
       <main className="flex-1 p-8 space-y-8 max-w-7xl ml-64">
@@ -68,7 +68,7 @@ export default function AnalyticsPage() {
           transition={{ duration: 0.6 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent mb-2">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mb-2">
             Analytics
           </h1>
           <p className="text-muted-foreground">Detailed insights into your trading performance</p>
@@ -196,7 +196,7 @@ export default function AnalyticsPage() {
             <Card className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl">
               <CardHeader>
                 <CardTitle className="text-xl font-bold flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-red-700 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center">
                     <BsArrowUpRight  className="w-5 h-5 text-white" />
                   </div>
                   Performance Over Time
@@ -330,7 +330,7 @@ export default function AnalyticsPage() {
           transition={{ delay: 0.9, duration: 0.6 }}
           className="flex justify-end"
         >
-          <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-600/90 hover:to-red-700/90 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-red-500/25 transition-all">
+          <Button className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/80 text-white px-6 py-3 rounded-xl shadow-lg transition-all">
             <BsCalendar className="w-4 h-4 mr-2" />
             Export Report
           </Button>

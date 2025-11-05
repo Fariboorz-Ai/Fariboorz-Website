@@ -62,7 +62,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <body className={`bg-base-100 ${poppins.variable}`}>
         <AuthProvider>
           <ThemeProvider>
-            <main className="container mx-auto min-h-screen overflow-scroll no-scrollbar">
+            <main className=" min-h-screen overflow-scroll no-scrollbar">
               {children}
             </main>
           </ThemeProvider>

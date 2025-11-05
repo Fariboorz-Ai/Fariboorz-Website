@@ -140,12 +140,12 @@ export default function SettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900 text-white">
+      <div className="flex min-h-screen bg-background text-foreground">
         <Sidebar />
         <main className="flex-1 p-6 md:p-10 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin w-8 h-8 border-2 border-red-600 border-t-transparent rounded-full mx-auto mb-4" />
-            <p className="text-gray-400">Loading settings...</p>
+            <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+            <p className="text-muted-foreground">Loading settings...</p>
           </div>
         </main>
       </div>
@@ -154,12 +154,12 @@ export default function SettingsPage() {
 
   if (!settings) {
     return (
-      <div className="flex min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900 text-white">
+      <div className="flex min-h-screen bg-background text-foreground">
         <Sidebar />
         <main className="flex-1 p-6 md:p-10 flex items-center justify-center">
           <div className="text-center">
-            <Icon icon="mdi:alert-circle" className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <p className="text-gray-400">Failed to load settings</p>
+            <Icon icon="mdi:alert-circle" className="w-12 h-12 text-primary mx-auto mb-4" />
+            <p className="text-muted-foreground">Failed to load settings</p>
           </div>
         </main>
       </div>
@@ -188,7 +188,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900 text-white font-sans">
+    <div className="flex-1 p-8   ml-64 min-h-screen bg-background text-foreground font-sans">
       <Sidebar />
 
       <main className="flex-1 p-6 md:p-10 space-y-10 max-w-5xl mx-auto">
@@ -196,12 +196,12 @@ export default function SettingsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-6"
+          className="mb-8"
         >
-          <h1 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent mb-1">
+          <h1 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mb-1">
             Account Settings
           </h1>
-          <p className="text-gray-400 text-base">Manage your account and trading configuration</p>
+          <p className="text-muted-foreground text-base">Manage your account and trading configuration</p>
         </motion.div>
 
  
@@ -211,8 +211,8 @@ export default function SettingsPage() {
             animate={{ opacity: 1, y: 0 }}
             className={`p-4 rounded-lg border ${
               state.success 
-                ? 'bg-green-500/10 border-green-500/20 text-green-400' 
-                : 'bg-red-500/10 border-red-500/20 text-red-400'
+                ? 'bg-success/10 border-success/20 text-success' 
+                : 'bg-primary/10 border-primary/20 text-primary'
             }`}
           >
             {state.message}
@@ -224,11 +224,12 @@ export default function SettingsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.6 }}
+            className="mt-8 mb-8"
           >
-            <Card className="bg-gray-900/70 border border-gray-800 rounded-2xl shadow-xl">
-              <CardHeader className="border-b border-gray-800">
-                <CardTitle className="text-lg md:text-xl font-bold flex items-center gap-3 text-white">
-                  <div className="w-9 h-9 bg-gradient-to-br from-red-600 to-red-700 rounded-xl flex items-center justify-center">
+            <Card className="bg-card/80 border border-border/50 rounded-2xl shadow-xl">
+              <CardHeader className="border-b border-border/30">
+                <CardTitle className="text-lg md:text-xl font-bold flex items-center gap-3 text-foreground">
+                  <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center">
                     <Icon icon="mdi:exchange" className="w-5 h-5 text-white" />
                   </div>
                   Exchange Settings
@@ -236,26 +237,26 @@ export default function SettingsPage() {
               </CardHeader>
               <CardContent className="space-y-6 mt-6">
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-300">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Select Exchange
                   </Label>
                   <Select name="exchangeName" defaultValue={settings.exchangeName}>
-                    <SelectTrigger className="bg-gray-900/60 border-gray-800 focus:border-red-600 focus:ring-red-600/20 text-white">
+                    <SelectTrigger className="bg-background/60 border-border focus:border-primary focus:ring-primary/20 text-foreground">
                       <SelectValue placeholder="Choose your exchange" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-900 border-gray-800">
+                    <SelectContent className="bg-card border-border">
                       {exchanges.map(ex => (
                         <SelectItem 
                           key={ex.id} 
                           value={ex.id}
-                          className="flex items-center justify-between text-white hover:bg-red-600/10"
+                          className="flex items-center justify-between text-foreground hover:bg-primary/10"
                         >
                           <div className="flex items-center gap-3">
                             <span className="font-medium">{ex.name}</span>
                             <span className={`text-xs px-2 py-1 rounded-full ${
                               ex.status === 'Connected' 
-                                ? 'bg-green-500/20 text-green-400' 
-                                : 'bg-gray-500/20 text-gray-400'
+                                ? 'bg-success/20 text-success' 
+                                : 'bg-muted/20 text-muted-foreground'
                             }`}>
                               {ex.status}
                             </span>
@@ -268,7 +269,7 @@ export default function SettingsPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium text-gray-300">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       API Key
                     </Label>
                     <div className="relative">
@@ -276,20 +277,20 @@ export default function SettingsPage() {
                         name="apiKey"
                         type={showApiKey ? "text" : "password"}
                         defaultValue={settings.apiKey}
-                        className="pr-10 bg-gray-900/60 border-gray-800 focus:border-red-600 focus:ring-red-600/20 text-white"
+                        className="pr-10 bg-background/60 border-border focus:border-primary focus:ring-primary/20 text-foreground"
                         placeholder="Enter your API key"
                       />
                       <button
                         type="button"
                         onClick={() => setShowApiKey(!showApiKey)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
                       >
                         {showApiKey ? <Icon icon="mdi:eye-off" className="w-4 h-4" /> : <Icon icon="mdi:eye" className="w-4 h-4" />}
                       </button>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium text-gray-300">
+                    <Label className="text-sm font-medium text-muted-foreground">
                       API Secret
                     </Label>
                     <div className="relative">
@@ -297,13 +298,13 @@ export default function SettingsPage() {
                         name="apiSecret"
                         type={showApiSecret ? "text" : "password"}
                         defaultValue={settings.apiSecret}
-                        className="pr-10 bg-gray-900/60 border-gray-800 focus:border-red-600 focus:ring-red-600/20 text-white"
+                        className="pr-10 bg-background/60 border-border focus:border-primary focus:ring-primary/20 text-foreground"
                         placeholder="Enter your API secret"
                       />
                       <button
                         type="button"
                         onClick={() => setShowApiSecret(!showApiSecret)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
                       >
                         {showApiSecret ? <Icon icon="mdi:eye-off" className="w-4 h-4" /> : <Icon icon="mdi:eye" className="w-4 h-4" />}
                       </button>
@@ -318,11 +319,12 @@ export default function SettingsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
+            className="mt-8 mb-8"
           >
-            <Card className="bg-gray-900/70 border border-gray-800 rounded-2xl shadow-xl">
-              <CardHeader className="border-b border-gray-800">
-                <CardTitle className="text-lg md:text-xl font-bold flex items-center gap-3 text-white">
-                  <div className="w-9 h-9 bg-gradient-to-br from-red-600 to-red-700 rounded-xl flex items-center justify-center">
+            <Card className="bg-card/80 border border-border/50 rounded-2xl shadow-xl">
+              <CardHeader className="border-b border-border/30">
+                <CardTitle className="text-lg md:text-xl font-bold flex items-center gap-3 text-foreground">
+                  <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center">
                     <Icon icon="mdi:cog" className="w-5 h-5 text-white" />
                   </div>
                   Trading Settings
@@ -330,23 +332,23 @@ export default function SettingsPage() {
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-300">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Leverage
                   </Label>
                   <Select name="leverage" defaultValue={settings.leverage.toString()}>
-                    <SelectTrigger className="bg-gray-900/60 border-gray-800 focus:border-red-600 focus:ring-red-600/20 text-white">
+                    <SelectTrigger className="bg-background/60 border-border focus:border-primary focus:ring-primary/20 text-foreground">
                       <SelectValue placeholder="Select leverage" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-900 border-gray-800">
+                    <SelectContent className="bg-card border-border">
                       {[1, 5, 10, 20, 50, 100].map(val => (
                         <SelectItem 
                           key={val} 
                           value={val.toString()}
-                          className="flex items-center justify-between text-white hover:bg-red-600/10"
+                          className="flex items-center justify-between text-foreground hover:bg-primary/10"
                         >
                           <span className="font-medium">{val}x</span>
                           <span className={`text-xs px-2 py-1 rounded-full ${
-                            val > 10 ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'
+                            val > 10 ? 'bg-primary/20 text-primary' : 'bg-warning/20 text-warning'
                           }`}>
                             {val > 10 ? 'High Risk' : 'Moderate Risk'}
                           </span>
@@ -357,7 +359,7 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-300">
+                    <Label className="text-sm font-medium text-muted-foreground">
                     Trading Strategy
                   </Label>
                   <Select
@@ -369,7 +371,7 @@ export default function SettingsPage() {
                     }
                     disabled={!(settings.strategies && settings.strategies.length > 0)}
                   >
-                    <SelectTrigger className="bg-gray-900/60 border-gray-800 focus:border-red-600 focus:ring-red-600/20 text-white">
+                      <SelectTrigger className="bg-background/60 border-border focus:border-primary focus:ring-primary/20 text-foreground">
                       <SelectValue
                         placeholder={
                           settings.strategies && settings.strategies.length === 0
@@ -378,22 +380,22 @@ export default function SettingsPage() {
                         }
                       />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-900 border-gray-800">
+                      <SelectContent className="bg-card border-border">
                       {settings.strategies && settings.strategies.length > 0 ? (
                         settings.strategies.map(strat => (
                           <SelectItem 
                             key={strat.id} 
                             value={strat.id}
-                            className="flex items-center justify-between text-white hover:bg-red-600/10"
+                              className="flex items-center justify-between text-foreground hover:bg-primary/10"
                           >
                             <div className="flex flex-col">
                               <span className="font-medium">{strat.name}</span>
-                              <span className="text-xs text-gray-400">ID: {strat.strategy_id}</span>
+                                <span className="text-xs text-muted-foreground">ID: {strat.strategy_id}</span>
                             </div>
                           </SelectItem>
                         ))
                       ) : (
-                        <div className="px-3 py-2 text-gray-400 text-sm select-none">
+                          <div className="px-3 py-2 text-muted-foreground text-sm select-none">
                           now we dont have active strategy
                         </div>
                       )}
@@ -402,18 +404,18 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-300">
+                    <Label className="text-sm font-medium text-muted-foreground">
                     Margin Type
                   </Label>
                   <Select name="marginType" defaultValue={settings.marginType}>
-                    <SelectTrigger className="bg-gray-900/60 border-gray-800 focus:border-red-600 focus:ring-red-600/20 text-white">
+                      <SelectTrigger className="bg-background/60 border-border focus:border-primary focus:ring-primary/20 text-foreground">
                       <SelectValue placeholder="Select margin type" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-900 border-gray-800">
-                      <SelectItem value="cross" className="text-white hover:bg-red-600/10">
+                      <SelectContent className="bg-card border-border">
+                        <SelectItem value="cross" className="text-foreground hover:bg-primary/10">
                         <span className="font-medium">Cross Margin</span>
                       </SelectItem>
-                      <SelectItem value="isolated" className="text-white hover:bg-red-600/10">
+                        <SelectItem value="isolated" className="text-foreground hover:bg-primary/10">
                         <span className="font-medium">Isolated Margin</span>
                       </SelectItem>
                     </SelectContent>
@@ -421,7 +423,7 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-300">
+                    <Label className="text-sm font-medium text-muted-foreground">
                     Margin Amount (USDT)
                   </Label>
                   <Input
@@ -429,13 +431,13 @@ export default function SettingsPage() {
                     type="number"
                     min="0"
                     defaultValue={settings.margin}
-                    className="bg-gray-900/60 border-gray-800 focus:border-red-600 focus:ring-red-600/20 text-white"
+                      className="bg-background/60 border-border focus:border-primary focus:ring-primary/20 text-foreground"
                     placeholder="e.g. 100"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-300">
+                    <Label className="text-sm font-medium text-muted-foreground">
                     Daily Trade Limit
                   </Label>
                   <Input
@@ -443,22 +445,22 @@ export default function SettingsPage() {
                     type="number"
                     min="0"
                     defaultValue={settings.tradeLimit}
-                    className="bg-gray-900/60 border-gray-800 focus:border-red-600 focus:ring-red-600/20 text-white"
+                      className="bg-background/60 border-border focus:border-primary focus:ring-primary/20 text-foreground"
                     placeholder="e.g. 10 (0 = unlimited)"
                   />
-                  <span className="text-xs text-gray-400">If set to 0, there is no limit.</span>
+                    <span className="text-xs text-muted-foreground">If set to 0, there is no limit.</span>
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                  <Label className="text-sm font-medium text-gray-300">
+                    <Label className="text-sm font-medium text-muted-foreground">
                     Enable Auto Trading
                   </Label>
-                  <div className="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg border border-gray-800">
-                    <span className="text-sm text-gray-400">Enable automated trading by bot</span>
+                    <div className="flex items-center justify-between p-3 bg-background/40 rounded-lg border border-border">
+                      <span className="text-sm text-muted-foreground">Enable automated trading by bot</span>
                     <Switch
                       name="tradingActive"
                       defaultChecked={settings.tradingActive}
-                      className="data-[state=checked]:bg-red-600"
+                        className="data-[state=checked]:bg-primary"
                     />
                   </div>
                 </div>
@@ -470,11 +472,12 @@ export default function SettingsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
+            className="mt-8 mb-8"
           >
-            <Card className="bg-gray-900/70 border border-gray-800 rounded-2xl shadow-xl">
-              <CardHeader className="border-b border-gray-800">
-                <CardTitle className="text-lg md:text-xl font-bold flex items-center gap-3 text-white">
-                  <div className="w-9 h-9 bg-gradient-to-br from-red-600 to-red-700 rounded-xl flex items-center justify-center">
+            <Card className="bg-card/80 border border-border/50 rounded-2xl shadow-xl">
+              <CardHeader className="border-b border-border/30">
+                <CardTitle className="text-lg md:text-xl font-bold flex items-center gap-3 text-foreground">
+                  <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center">
                     <Icon icon="mdi:bell" className="w-5 h-5 text-white" />
                   </div>
                   Notifications & Preferences
@@ -483,34 +486,34 @@ export default function SettingsPage() {
               <CardContent className="space-y-6 mt-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg border border-gray-800">
+                    <div className="flex items-center justify-between p-3 bg-background/40 rounded-lg border border-border">
                       <div className="flex items-center gap-3">
-                        <Icon icon="mdi:bell" className="w-5 h-5 text-red-500" />
+                        <Icon icon="mdi:bell" className="w-5 h-5 text-primary" />
                         <div>
-                          <span className="font-medium text-white">Push Notifications</span>
-                          <p className="text-xs text-gray-400">Receive real-time alerts</p>
+                          <span className="font-medium text-foreground">Push Notifications</span>
+                          <p className="text-xs text-muted-foreground">Receive real-time alerts</p>
                         </div>
                       </div>
                       <Switch
                         name="notificationsActive"
                         defaultChecked={settings.notificationsActive}
-                        className="data-[state=checked]:bg-red-600"
+                        className="data-[state=checked]:bg-primary"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium text-gray-300">
+                      <Label className="text-sm font-medium text-muted-foreground">
                         Language
                       </Label>
                       <Select name="language" defaultValue={settings.language}>
-                        <SelectTrigger className="bg-gray-900/60 border-gray-800 focus:border-red-600 focus:ring-red-600/20 text-white">
+                        <SelectTrigger className="bg-background/60 border-border focus:border-primary focus:ring-primary/20 text-foreground">
                           <SelectValue placeholder="Select language" />
                         </SelectTrigger>
-                        <SelectContent className="bg-gray-900 border-gray-800">
-                          <SelectItem value="en" className="text-white hover:bg-red-600/10">
+                        <SelectContent className="bg-card border-border">
+                          <SelectItem value="en" className="text-foreground hover:bg-primary/10">
                             English
                           </SelectItem>
-                          <SelectItem value="fa" className="text-white hover:bg-red-600/10">
+                          <SelectItem value="fa" className="text-foreground hover:bg-primary/10">
                             فارسی
                           </SelectItem>
                         </SelectContent>
@@ -518,19 +521,19 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium text-gray-300">
+                      <Label className="text-sm font-medium text-muted-foreground">
                         Timezone
                       </Label>
                       <Select name="timezone" defaultValue={settings.timezone}>
-                        <SelectTrigger className="bg-gray-900/60 border-gray-800 focus:border-red-600 focus:ring-red-600/20 text-white">
+                        <SelectTrigger className="bg-background/60 border-border focus:border-primary focus:ring-primary/20 text-foreground">
                           <SelectValue placeholder="Select timezone" />
                         </SelectTrigger>
-                        <SelectContent className="bg-gray-900 border-gray-800">
+                        <SelectContent className="bg-card border-border">
                           {timezones.map(tz => (
                             <SelectItem 
                               key={tz.value} 
                               value={tz.value}
-                              className="text-white hover:bg-red-600/10"
+                              className="text-foreground hover:bg-primary/10"
                             >
                               {tz.label}
                             </SelectItem>
@@ -541,9 +544,9 @@ export default function SettingsPage() {
                   </div>
 
                   <div className="space-y-4">
-                    <div className="p-4 bg-gradient-to-br from-red-600/10 to-red-700/10 rounded-lg border border-red-600/20">
-                      <h4 className="font-semibold text-white mb-2">Security Tips</h4>
-                      <ul className="text-sm text-gray-400 space-y-1">
+                    <div className="p-4 bg-gradient-to-br from-primary/10 to-primary/20 rounded-lg border border-primary/20">
+                      <h4 className="font-semibold text-foreground mb-2">Security Tips</h4>
+                      <ul className="text-sm text-muted-foreground space-y-1">
                         <li>• Never share your API keys</li>
                         <li>• Use IP whitelisting when possible</li>
                         <li>• Enable 2FA on your exchange account</li>
@@ -560,11 +563,12 @@ export default function SettingsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
+            className="mt-8"
           >
-            <Card className="bg-gray-900/70 border border-gray-800 rounded-2xl shadow-xl">
-              <CardHeader className="border-b border-gray-800">
-                <CardTitle className="text-lg md:text-xl font-bold flex items-center gap-3 text-white">
-                  <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+            <Card className="bg-card/80 border border-border/50 rounded-2xl shadow-xl">
+              <CardHeader className="border-b border-border/30">
+                <CardTitle className="text-lg md:text-xl font-bold flex items-center gap-3 text-foreground">
+                  <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center">
                     <Icon icon="mdi:telegram" className="w-5 h-5 text-white" />
                   </div>
                   Telegram Integration
@@ -572,7 +576,7 @@ export default function SettingsPage() {
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-300">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Bot Token
                   </Label>
                   <div className="relative">
@@ -580,40 +584,40 @@ export default function SettingsPage() {
                       name="telegramToken"
                       type={showBotToken ? "text" : "password"}
                       defaultValue={settings.telegramToken}
-                      className="pr-10 bg-gray-900/60 border-gray-800 focus:border-red-600 focus:ring-red-600/20 text-white"
+                      className="pr-10 bg-background/60 border-border focus:border-primary focus:ring-primary/20 text-foreground"
                       placeholder="Enter bot token"
                     />
                     <button
                       type="button"
                       onClick={() => setShowBotToken(!showBotToken)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
                     >
                       {showBotToken ? <Icon icon="mdi:eye-off" className="w-4 h-4" /> : <Icon icon="mdi:eye" className="w-4 h-4" />}
                     </button>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-300">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Chat ID
                   </Label>
                   <Input
                     name="telegramChatId"
                     defaultValue={settings.telegramChatId}
-                    className="bg-gray-900/60 border-gray-800 focus:border-red-600 focus:ring-red-600/20 text-white"
+                    className="bg-background/60 border-border focus:border-primary focus:ring-primary/20 text-foreground"
                     placeholder="Enter chat ID"
                   />
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                  <Label className="text-sm font-medium text-gray-300">
+                    <Label className="text-sm font-medium text-muted-foreground">
                     Enable Telegram Notifications
                   </Label>
-                  <div className="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg border border-gray-800">
-                    <span className="text-sm text-gray-400">Receive notifications via Telegram</span>
+                    <div className="flex items-center justify-between p-3 bg-background/40 rounded-lg border border-border">
+                      <span className="text-sm text-muted-foreground">Receive notifications via Telegram</span>
                     <Switch
                       name="telegramActive"
                       defaultChecked={settings.telegramActive}
-                      className="data-[state=checked]:bg-red-600"
+                        className="data-[state=checked]:bg-primary"
                     />
                   </div>
                 </div>
@@ -630,14 +634,14 @@ export default function SettingsPage() {
             <Button 
               type="button"
               variant="outline"
-              className="border-2 border-gray-800 hover:border-red-600 bg-transparent text-white hover:bg-red-600/10 px-6 py-3 rounded-xl transition-all"
+              className="border-2 border-border hover:border-primary bg-transparent text-foreground hover:bg-primary/10 px-6 py-3 rounded-xl transition-all"
             >
               Cancel
             </Button>
             <Button 
               type="submit"
               disabled={isSubmitting}
-              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-600/90 hover:to-red-700/90 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-red-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/80 text-white px-8 py-3 rounded-xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <div className="flex items-center gap-2">

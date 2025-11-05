@@ -91,105 +91,105 @@ export default async function DashboardPage() {
   };
 
   return (
-    <div className="flex ml-64 min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+  <div className="flex ml-64 min-h-screen bg-background text-foreground">
       <Sidebar />
       
-      <main className="flex-1 p-8 pt-24 bg-transparent min-h-screen">
+  <main className="flex-1 p-8 pt-24 bg-transparent min-h-screen">
    
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white">Welcome back, {data.user?.name}</h1>
-            <p className="text-gray-400 mt-1">Here&apos;s what&apos;s happening with your trading today</p>
+            <h1 className="text-3xl font-bold text-foreground">Welcome back, {data.user?.name}</h1>
+            <p className="text-muted-foreground mt-1">Here&apos;s what&apos;s happening with your trading today</p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 rounded-lg border border-gray-700">
-              <div className={`w-2 h-2 rounded-full ${data.user?.subscription?.plan === 'vip' ? 'bg-yellow-500' : data.user?.subscription?.plan === 'pro' ? 'bg-blue-500' : 'bg-gray-500'}`} />
-              <span className="text-sm text-gray-300 capitalize">{data.user?.subscription?.plan || 'free'} Plan</span>
+            <div className="flex items-center gap-2 px-4 py-2 bg-card/80 rounded-lg border border-border/50">
+              <div className={`w-2 h-2 rounded-full ${data.user?.subscription?.plan === 'vip' ? 'bg-warning' : data.user?.subscription?.plan === 'pro' ? 'bg-primary' : 'bg-muted'}`} />
+              <span className="text-sm text-muted-foreground capitalize">{data.user?.subscription?.plan || 'free'} Plan</span>
             </div>
-            <button className="p-2 bg-gray-800/50 rounded-lg border border-gray-700 hover:bg-gray-700/50 transition-colors">
-              <Icon icon="mdi:bell" className="w-5 h-5 text-gray-300" />
+            <button className="p-2 bg-card/80 rounded-lg border border-border/50 hover:bg-background/50 transition-colors">
+              <Icon icon="mdi:bell" className="w-5 h-5 text-muted-foreground" />
             </button>
           </div>
         </div>
         
       
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-blue-900/50 to-blue-800/30 backdrop-blur border border-blue-700/50 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all">
+          <Card className="bg-card/80 border border-border/50 hover:border-success/50 hover:shadow-lg hover:shadow-success/10 transition-all">
             <CardHeader className="pb-2">
-              <CardTitle className="text-blue-300 text-sm font-medium flex items-center gap-2">
+              <CardTitle className="text-success text-sm font-medium flex items-center gap-2">
                 <Icon icon="mdi:chart-line" className="w-4 h-4" />
                 Total Profit/Loss
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className={`text-2xl font-bold ${data.stats.totalProfitLoss >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+              <p className={`text-2xl font-bold ${data.stats.totalProfitLoss >= 0 ? 'text-success' : 'text-primary'}`}> 
                 {formatCurrency(data.stats.totalProfitLoss)}
               </p>
               <div className="flex items-center gap-2 mt-2">
                 <Icon 
                   icon={data.stats.totalProfitLoss >= 0 ? "mdi:trending-up" : "mdi:trending-down"} 
-                  className={`w-4 h-4 ${data.stats.totalProfitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`} 
+                  className={`w-4 h-4 ${data.stats.totalProfitLoss >= 0 ? 'text-success' : 'text-primary'}`} 
                 />
-                <span className={`text-sm ${data.stats.totalProfitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                <span className={`text-sm ${data.stats.totalProfitLoss >= 0 ? 'text-success' : 'text-primary'}`}> 
                   {data.stats.totalProfitLoss >= 0 ? '+' : ''}{formatPercentage(data.stats.winRate)} win rate
                 </span>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-green-900/50 to-green-800/30 backdrop-blur border border-green-700/50 hover:border-green-500/50 hover:shadow-lg hover:shadow-green-500/10 transition-all">
+          <Card className="bg-card/80 border border-border/50 hover:border-success/50 hover:shadow-lg hover:shadow-success/10 transition-all">
             <CardHeader className="pb-2">
-              <CardTitle className="text-green-300 text-sm font-medium flex items-center gap-2">
+              <CardTitle className="text-success text-sm font-medium flex items-center gap-2">
                 <Icon icon="mdi:check-circle" className="w-4 h-4" />
                 Closed Trades
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-white">{data.stats.closedTrades}</p>
+              <p className="text-2xl font-bold text-foreground">{data.stats.closedTrades}</p>
               <div className="flex items-center gap-2 mt-2">
-                <Icon icon="mdi:chart-bar" className="w-4 h-4 text-green-500" />
-                <span className="text-sm text-green-500">
+                <Icon icon="mdi:chart-bar" className="w-4 h-4 text-success" />
+                <span className="text-sm text-success">
                   {data.stats.closedTrades > 0 ? formatCurrency(data.stats.averageProfit) : '$0.00'} avg profit
                 </span>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-yellow-900/50 to-yellow-800/30 backdrop-blur border border-yellow-700/50 hover:border-yellow-500/50 hover:shadow-lg hover:shadow-yellow-500/10 transition-all">
+          <Card className="bg-card/80 border border-border/50 hover:border-warning/50 hover:shadow-lg hover:shadow-warning/10 transition-all">
             <CardHeader className="pb-2">
-              <CardTitle className="text-yellow-300 text-sm font-medium flex items-center gap-2">
+              <CardTitle className="text-warning text-sm font-medium flex items-center gap-2">
                 <Icon icon="mdi:clock-outline" className="w-4 h-4" />
                 Open Trades
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-white">{data.stats.openTrades}</p>
+              <p className="text-2xl font-bold text-foreground">{data.stats.openTrades}</p>
               <div className="flex items-center gap-2 mt-2">
-                <Icon icon="mdi:alert-circle" className="w-4 h-4 text-yellow-500" />
-                <span className="text-sm text-yellow-500">
+                <Icon icon="mdi:alert-circle" className="w-4 h-4 text-warning" />
+                <span className="text-sm text-warning">
                   {data.stats.openTrades > 0 ? 'Active positions' : 'No open trades'}
                 </span>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-900/50 to-purple-800/30 backdrop-blur border border-purple-700/50 hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/10 transition-all">
+          <Card className="bg-card/80 border border-border/50 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/10 transition-all">
             <CardHeader className="pb-2">
-              <CardTitle className="text-purple-300 text-sm font-medium flex items-center gap-2">
+              <CardTitle className="text-accent text-sm font-medium flex items-center gap-2">
                 <Icon icon="mdi:robot" className="w-4 h-4" />
                 Trading Status
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-baseline gap-2">
-                <p className="text-2xl font-bold text-white">
+                <p className="text-2xl font-bold text-foreground">
                   {data.user?.trade_settings?.isActive ? 'Active' : 'Inactive'}
                 </p>
               </div>
               <div className="mt-2">
                 <div className="flex items-center gap-2 text-sm">
-                  <Icon icon="mdi:exchange" className="w-4 h-4 text-purple-500" />
-                  <span className="text-purple-400">
+                  <Icon icon="mdi:exchange" className="w-4 h-4 text-accent" />
+                  <span className="text-accent">
                     {data.user?.exchange?.name ? data.user.exchange.name.toUpperCase() : 'No Exchange'}
                   </span>
                 </div>
@@ -199,12 +199,12 @@ export default async function DashboardPage() {
         </div>
 
    
-        <Card className="p-6 mb-8 bg-gray-800/50 backdrop-blur border border-gray-700 hover:border-red-500/50 hover:shadow-lg hover:shadow-red-500/10 transition-all">
+  <Card className="p-6 mb-8 bg-card/80 backdrop-blur border border-border/50 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-white">Portfolio Performance (Last 7 Days)</h3>
-            <div className="flex items-center gap-4 text-sm text-gray-400">
+            <h3 className="text-lg font-semibold text-foreground">Portfolio Performance (Last 7 Days)</h3>
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-primary rounded-full"></div>
                 <span>Portfolio Value</span>
               </div>
             </div>
@@ -217,9 +217,9 @@ export default async function DashboardPage() {
 
      
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="bg-gray-800/50 backdrop-blur border border-gray-700 hover:border-red-500/50 hover:shadow-lg hover:shadow-red-500/10 transition-all">
+          <Card className="bg-card/80 backdrop-blur border border-border/50 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
+              <CardTitle className="text-foreground flex items-center gap-2">
                 <Icon icon="mdi:history" className="w-5 h-5" />
                 Recent Trades
               </CardTitle>
@@ -228,24 +228,24 @@ export default async function DashboardPage() {
               <div className="space-y-4">
                 {data.recentTrades.length > 0 ? (
                   data.recentTrades.map((trade) => (
-                    <div key={trade._id} className="flex items-center justify-between p-3 bg-gray-700/30 rounded-lg">
+                    <div key={trade._id} className="flex items-center justify-between p-3 bg-background/30 rounded-lg">
                       <div className="flex items-center gap-3">
-                        <div className={`w-2 h-2 rounded-full ${trade.side === 'BUY' ? 'bg-green-500' : 'bg-red-500'}`} />
+                        <div className={`w-2 h-2 rounded-full ${trade.side === 'BUY' ? 'bg-success' : 'bg-primary'}`} />
                         <div>
-                          <p className="font-medium text-white">{trade.symbol}</p>
-                          <p className="text-sm text-gray-400">{trade.side} • {trade.status}</p>
+                          <p className="font-medium text-foreground">{trade.symbol}</p>
+                          <p className="text-sm text-muted-foreground">{trade.side} • {trade.status}</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium text-white">${trade.entryPrice?.toFixed(2)}</p>
-                        <p className={`text-sm ${trade.profitLoss && trade.profitLoss > 0 ? 'text-green-500' : trade.profitLoss && trade.profitLoss < 0 ? 'text-red-500' : 'text-gray-400'}`}>
+                        <p className="font-medium text-foreground">${trade.entryPrice?.toFixed(2)}</p>
+                        <p className={`text-sm ${trade.profitLoss && trade.profitLoss > 0 ? 'text-success' : trade.profitLoss && trade.profitLoss < 0 ? 'text-primary' : 'text-muted-foreground'}`}>
                           {trade.profitLoss ? formatCurrency(trade.profitLoss) : 'Pending'}
                         </p>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-8 text-gray-400">
+                  <div className="text-center py-8 text-muted-foreground">
                     <Icon icon="mdi:chart-line" className="w-12 h-12 mx-auto mb-2 opacity-50" />
                     <p>No trades yet</p>
                     <p className="text-sm">Start trading to see your activity here</p>
@@ -255,9 +255,9 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-800/50 backdrop-blur border border-gray-700 hover:border-red-500/50 hover:shadow-lg hover:shadow-red-500/10 transition-all">
+          <Card className="bg-card/80 backdrop-blur border border-border/50 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
+              <CardTitle className="text-foreground flex items-center gap-2">
                 <Icon icon="mdi:bell" className="w-5 h-5" />
                 Recent Notifications
               </CardTitle>
@@ -266,23 +266,23 @@ export default async function DashboardPage() {
               <div className="space-y-4">
                 {data.notifications.length > 0 ? (
                   data.notifications.map((notification) => (
-                    <div key={notification._id} className="flex items-start gap-3 p-3 bg-gray-700/30 rounded-lg">
+                    <div key={notification._id} className="flex items-start gap-3 p-3 bg-background/30 rounded-lg">
                       <div className={`w-2 h-2 rounded-full mt-2 ${
-                        notification.type === 'trade' ? 'bg-green-500' : 
-                        notification.type === 'signal' ? 'bg-blue-500' : 
-                        notification.type === 'alert' ? 'bg-yellow-500' : 'bg-gray-500'
+                        notification.type === 'trade' ? 'bg-success' : 
+                        notification.type === 'signal' ? 'bg-primary' : 
+                        notification.type === 'alert' ? 'bg-warning' : 'bg-muted'
                       }`} />
                       <div className="flex-1">
-                        <p className="text-white font-medium">{notification.title}</p>
-                        <p className="text-sm text-gray-400">{notification.message}</p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-foreground font-medium">{notification.title}</p>
+                        <p className="text-sm text-muted-foreground">{notification.message}</p>
+                        <p className="text-xs text-muted-foreground mt-1">
                           {new Date(notification.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-8 text-gray-400">
+                  <div className="text-center py-8 text-muted-foreground">
                     <Icon icon="mdi:bell-off" className="w-12 h-12 mx-auto mb-2 opacity-50" />
                     <p>No notifications</p>
                     <p className="text-sm">You&apos;re all caught up!</p>
@@ -295,9 +295,9 @@ export default async function DashboardPage() {
 
     
         <div className="mt-8">
-          <Card className="bg-gray-800/50 backdrop-blur border border-gray-700">
+          <Card className="bg-card/80 backdrop-blur border border-border/50">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
+              <CardTitle className="text-foreground flex items-center gap-2">
                 <Icon icon="mdi:account-cog" className="w-5 h-5" />
                 Account Status
               </CardTitle>
@@ -306,14 +306,14 @@ export default async function DashboardPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-400">Exchange Connection:</span>
-                    <span className={`text-sm px-2 py-1 rounded-full ${data.user?.exchange?.isActive ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                    <span className="text-muted-foreground">Exchange Connection:</span>
+                    <span className={`text-sm px-2 py-1 rounded-full ${data.user?.exchange?.isActive ? 'bg-success/20 text-success' : 'bg-primary/20 text-primary'}`}>
                       {data.user?.exchange?.isActive ? 'Connected' : 'Not Connected'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-400">Telegram Bot:</span>
-                    <span className={`text-sm px-2 py-1 rounded-full ${data.user?.telegram?.isActive ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                    <span className="text-muted-foreground">Telegram Bot:</span>
+                    <span className={`text-sm px-2 py-1 rounded-full ${data.user?.telegram?.isActive ? 'bg-success/20 text-success' : 'bg-primary/20 text-primary'}`}>
                       {data.user?.telegram?.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </div>
@@ -321,14 +321,14 @@ export default async function DashboardPage() {
                 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-400">Trading Strategy:</span>
-                    <span className="text-white text-sm">
+                    <span className="text-muted-foreground">Trading Strategy:</span>
+                    <span className="text-foreground text-sm">
                       {data.user?.trade_settings?.strategyId ? 'Active' : 'None Selected'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-400">Leverage:</span>
-                    <span className="text-white text-sm">
+                    <span className="text-muted-foreground">Leverage:</span>
+                    <span className="text-foreground text-sm">
                       {data.user?.trade_settings?.leverage}x
                     </span>
                   </div>
@@ -336,14 +336,14 @@ export default async function DashboardPage() {
                 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-400">Last Login:</span>
-                    <span className="text-white text-sm">
+                    <span className="text-muted-foreground">Last Login:</span>
+                    <span className="text-foreground text-sm">
                       {data.user?.lastLogin ? new Date(data.user.lastLogin).toLocaleDateString() : 'Never'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-400">Member Since:</span>
-                    <span className="text-white text-sm">
+                    <span className="text-muted-foreground">Member Since:</span>
+                    <span className="text-foreground text-sm">
                       {data.user?.createdAt ? new Date(data.user.createdAt).toLocaleDateString() : 'Unknown'}
                     </span>
                   </div>
