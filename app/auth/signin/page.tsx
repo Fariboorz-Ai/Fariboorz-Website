@@ -42,7 +42,8 @@ const SignIn = () => {
        
         setErrorMessage(result?.error || "Invalid email or password.");
       } else {
-         redirect('/auth/signin');
+        console.log("Sign-in successful");
+         redirect('/dashboard');
       }
       await new Promise(resolve => setTimeout(resolve, 1000));
     } catch (error) {
@@ -53,7 +54,7 @@ const SignIn = () => {
   };
   
   if(session?.data?.user){
-    redirect('/auth/signin');
+    redirect('/dashboard');
     return null;
   }
 

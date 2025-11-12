@@ -1,4 +1,4 @@
-import NextAuth, { AuthOptions } from "next-auth";
+import { AuthOptions } from "next-auth";
 import userModel from "@/app/models/userModel";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
@@ -11,44 +11,34 @@ export const authOptions: AuthOptions = {
     CredentialsProvider({
       name: "Email",
       credentials: {
-        email: {
-          label: "email",
-          type: "text",
-          placeholder: "enter your email",
-        },
+        email: { label: "Email", type: "text", placeholder: "Enter your email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         await connectDB();
+
         const email = (credentials?.email || "").toString().trim().toLowerCase();
         const password = (credentials?.password || "").toString();
+
         if (!email || !password) {
           throw new Error("CREDENTIALS_REQUIRED");
         }
-        const findedUser = await userModel
-          .findOne({ email })
-          .select("+password");
-        if (!findedUser) throw new Error("USER_NOT_FOUND");
 
-        const successCompare = await bcrypt.compare(
-          password,
-          findedUser.password
-        );
-        if (!successCompare) throw new Error("CREDENTIALS_MATCH_ERROR");
+        const user = await userModel.findOne({ email }).select("+password");
+        if (!user) throw new Error("USER_NOT_FOUND");
+
+        const isValid = await bcrypt.compare(password, user.password);
+        if (!isValid) throw new Error("CREDENTIALS_MATCH_ERROR");
 
         return {
-          id: findedUser._id,
-          email: findedUser.email,
-          name: findedUser.name,
-          role: findedUser.role,
+          id: user._id.toString(),
+          email: user.email,
+          name: user.name,
+          role: user.role,
         };
       },
     }),
   ],
-  pages: {
-    signIn: "/auth/signin",
-    newUser: "/auth/signup",
-  },
 
   adapter: MongoDBAdapter(clientPromise, {
     collections: {
@@ -58,32 +48,55 @@ export const authOptions: AuthOptions = {
       VerificationTokens: "token",
     },
   }),
+
+  pages: {
+    signIn: "/auth/signin",
+    newUser: "/auth/signup",
+  },
+
   session: {
     strategy: "jwt",
   },
+
   callbacks: {
-    async signIn({ user, account, profile }) {
-      if (user) {
-        return true;
-      } else {
-        return false;
-      }
+    async signIn({ user }) {
+      return !!user;
     },
+
     async jwt({ token, user }) {
+    
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.email = user.email;
+        token.name = user.name;
       }
       return token;
     },
+
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
-        session.user.email = token.email as string;
-        session.user.name = token.name as string;
+      await connectDB();
+
+      if (token?.id) {
+        const freshUser = await userModel.findById(token.id).lean();
+        if (freshUser && !Array.isArray(freshUser)) {
+          session.user = {
+            id: freshUser._id?.toString(),
+            name: freshUser.name,
+            email: freshUser.email,
+            role: freshUser.role,
+            national_code: freshUser.national_code,
+          };
+
+          token.role = freshUser.role;
+          token.email = freshUser.email;
+          token.name = freshUser.name;
+        }
       }
+
       return session;
     },
   },
+
+  secret: process.env.NEXTAUTH_SECRET,
 };

@@ -7,26 +7,34 @@ import Link from "next/link";
 import { cn } from "@/utils/utils";
 import Icon from "./Icon";
 import Image from "next/image";
-import { getSession, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 const navItems = [
-  { href: "/dashboard", label: "Overview", icon: "mdi:view-dashboard" },
-  { href: "/dashboard/trades", label: "Trades History", icon: "mdi:history" },
-  { href: "/dashboard/notifications", label: "Notifications", icon: "mdi:bell" },
-  { href: "/dashboard/setting", label: "Settings", icon: "mdi:cog" },
+  { href: "/dashboard", label: "Overview", icon: "mdi:view-dashboard" , isAdmin: false },
+  { href: "/dashboard/trades", label: "Trades History", icon: "mdi:history", isAdmin: false  },
+  { href: "/dashboard/notifications", label: "Notifications", icon: "mdi:bell", isAdmin: false  },
+  { href: "/dashboard/setting", label: "Settings", icon: "mdi:cog" , isAdmin: false  },
+
+  { href: "/dashboard/admin/app_health", label: "App Health", icon: "mdi:heart-pulse", isAdmin: true  },
+  { href: "/dashboard/admin/app_status", label: "System Status", icon: "mdi:server-network", isAdmin: true  },
+  { href: "/dashboard/admin/app_signals", label: "App Signals", icon: "mdi:signal", isAdmin: true  },
+  { href: "/dashboard/admin/crash_history", label: "Crash History", icon: "mdi:file-chart", isAdmin: true  },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+  const { data: session } = useSession();
+  useEffect(() => {   
+     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
+
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
+  
+
   const Logout = async () => {
     try {
       setIsOpen(false);
@@ -65,23 +73,27 @@ export default function Sidebar() {
         </div>
 
         <nav className="p-4 flex flex-col gap-2">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setIsOpen(false)}
-              className={cn(
-                "flex items-center gap-3 p-3 rounded-xl transition-all",
-                "hover:bg-red-600/10 hover:text-red-700 focus:bg-red-600/10 focus:text-red-700",
-                pathname === item.href
-                  ? "bg-red-600/10 text-red-700 font-semibold"
-                  : "text-foreground"
-              )}
-            >
-              <Icon icon={item.icon} className={cn("w-5 h-5", pathname === item.href ? "text-red-700" : "text-foreground")} />
-              <span>{item.label}</span>
-            </Link>
-          ))}
+          {navItems
+            .filter((item) => {
+              if (!item.isAdmin) return true;
+              const role = session?.user?.role ? String(session.user.role).toUpperCase() : undefined;
+              return role === "ADMIN" || role === "ROOT";
+            })
+            .map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 p-3 rounded-xl transition-all",
+                  "hover:bg-red-600/10 hover:text-red-700 focus:bg-red-600/10 focus:text-red-700",
+                  pathname === item.href ? "bg-red-600/10 text-red-700 font-semibold" : "text-foreground"
+                )}
+              >
+                <Icon icon={item.icon} className={cn("w-5 h-5", pathname === item.href ? "text-red-700" : "text-foreground")} />
+                <span>{item.label}</span>
+              </Link>
+            ))}
         </nav>
 
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border">
