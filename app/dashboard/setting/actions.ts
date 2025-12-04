@@ -92,6 +92,7 @@ export async function loadUserSettings() {
     const strategiesResult = await loadStrategies();
     const strategies = strategiesResult.success ? strategiesResult.data : [];
 
+        
     return {
       success: true,
       data: {
@@ -163,7 +164,14 @@ export async function saveUserSettings(formData: FormData) {
       language,
       notificationsActive,
     } = validatedFields.data;
-
+    
+  
+    let margin_type = 'CROSS';
+    if (exchangeName === 'bitunix') {
+      margin_type = marginType === 'isolated' ? 'ISOLATION' : 'CROSS';
+    } else if (exchangeName === 'bingx') {
+      margin_type = marginType === 'isolated' ? 'ISOLATED' : 'CROSSED';
+    }
 
     const updateData: any = {
       exchange: exchangeName ? {
@@ -180,7 +188,7 @@ export async function saveUserSettings(formData: FormData) {
       trade_settings: {
         strategyId: strategyId ? strategyId : null,
         leverage,
-        marginType,
+        margin_type,
         margin,
         tradeLimit,
         isActive: tradingActive,
