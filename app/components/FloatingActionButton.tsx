@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { BsArrowUp, BsChat, BsWhatsapp } from "react-icons/bs";
 import { Button } from "./ui/Button";
-
+import Link from "next/link";
 export default function FloatingActionButton() {
   const [isVisible, setIsVisible] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -64,7 +64,7 @@ export default function FloatingActionButton() {
                       asChild
                       className={`w-12 h-12 rounded-full ${action.color} text-white shadow-lg hover:shadow-xl transition-all duration-300 group`}
                     >
-                      <a
+                      <Link
                         href={action.href}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -72,7 +72,7 @@ export default function FloatingActionButton() {
                         title={action.label}
                       >
                         <action.icon className="w-5 h-5" />
-                      </a>
+                      </Link>
                     </Button>
                   </motion.div>
                 ))}

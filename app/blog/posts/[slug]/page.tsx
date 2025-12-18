@@ -12,10 +12,12 @@ import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
 import { FaCalendarAlt, FaClock, FaUser, FaArrowLeft, FaShareAlt, FaBookmark, FaEye } from "react-icons/fa";
 import { Button } from "@/app/components/ui/Button";
+import Image from "next/image";
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;  
 }
+
 
 type BlogItem = {
   id: string;
@@ -48,8 +50,8 @@ async function getRecommended(slug: string, limit = 3) {
   return docs;
 }
 
-export default async function BlogPage(props: Props) {
-  const { slug } = await props.params;
+export default async function BlogPage({ params }: Props) {
+ const { slug } = await params;
   const postDoc: any = await getPostBySlug(slug);
 
   if (!postDoc) {
@@ -80,7 +82,7 @@ export default async function BlogPage(props: Props) {
           {post.thumbnail && (
             <div className="relative h-[400px] md:h-[500px] w-full rounded-3xl overflow-hidden shadow-2xl group">
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10" />
-              <img
+              <Image
                 src={post.thumbnail}
                 alt={post.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -215,7 +217,7 @@ export default async function BlogPage(props: Props) {
                       <div className="flex items-start gap-4 p-4 rounded-xl hover:bg-base-200 transition-all duration-300 border border-transparent hover:border-base-300">
                         {r.thumbnail && (
                           <div className="flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden">
-                            <img
+                            <Image
                               src={r.thumbnail}
                               alt={r.title}
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
@@ -275,7 +277,7 @@ export default async function BlogPage(props: Props) {
                 <div className="bg-base-100 rounded-3xl shadow-lg overflow-hidden border border-base-300 h-full hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
                   {r.thumbnail && (
                     <div className="relative h-48 overflow-hidden">
-                      <img
+                      <Image
                         src={r.thumbnail}
                         alt={r.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"

@@ -22,6 +22,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/utils/authOptions";
 import { redirect } from 'next/navigation';
 import {deleteBlogAction} from './actions';
+import Image from 'next/image';
 
 dotenv.config();
 
@@ -151,7 +152,7 @@ export default async function AdminBlogPage() {
                           <div className="flex items-center gap-4">
                             <div className="w-16 h-16 bg-muted/30 rounded-lg border-2 border-dashed border-border flex items-center justify-center overflow-hidden flex-shrink-0">
                               {b.thumbnail ? (
-                                <img 
+                                <Image 
                                   src={b.thumbnail} 
                                   alt={b.title} 
                                   className="w-full h-full object-cover" 

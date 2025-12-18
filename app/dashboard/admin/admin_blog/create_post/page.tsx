@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../../../components
 import Sidebar from "../../../../components/Sidebar";
 import { createBlogAction } from "./actions";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
@@ -156,7 +157,7 @@ export default function CreatePostPage() {
                         transition={{ duration: 0.3 }}
                         className="relative rounded-xl overflow-hidden shadow-xl border border-border/30"
                       >
-                        <img
+                        <Image
                           src={thumbnail}
                           alt="Thumbnail preview"
                           className="w-full h-96 object-cover"

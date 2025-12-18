@@ -6,6 +6,7 @@ import Blog from "../models/blogModel";
 import Link from "next/link";
 import { format } from "date-fns";
 import { FaCalendarAlt, FaClock, FaArrowRight, FaFire, FaBookOpen, FaEye } from "react-icons/fa";
+import Image from "next/image";
 
 type BlogItem = {
   id: string;
@@ -64,7 +65,7 @@ function BlogCard({ blog, index }: { blog: BlogItem; index: number }) {
           {blog.thumbnail ? (
             <div className={`relative ${isFeatured ? 'md:w-2/5 h-40 md:h-auto' : 'h-40'} overflow-hidden flex-shrink-0`}>
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent z-10" />
-              <img
+              <Image
                 src={blog.thumbnail}
                 alt={blog.title}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -204,7 +205,7 @@ export default async function BlogPage() {
               </div>
               <h3 className="text-xl font-bold text-foreground mb-2">No articles yet</h3>
               <p className="text-muted-foreground max-w-md mx-auto text-sm">
-                We're working on creating amazing content for you. Check back soon!
+                We&apos;re working on creating amazing content for you. Check back soon!
               </p>
             </div>
           )}

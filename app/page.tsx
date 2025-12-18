@@ -213,7 +213,7 @@ export default function Home() {
                   <div className="relative bg-gradient-to-br from-red-600/20 via-red-500/20 to-red-700/20 rounded-3xl p-1 shadow-2xl">
                     <div className="bg-background/80 backdrop-blur-xl rounded-3xl p-8 aspect-square flex items-center justify-center relative overflow-hidden">
                       <Image
-                       src="/images/hero-light.png"
+                       src="/images/Hero-Light.png"
                        className="relative z-10 w-full h-auto rounded-2xl"
                         width={500}
                         height={500}
