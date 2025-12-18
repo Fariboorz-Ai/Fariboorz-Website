@@ -21,6 +21,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Progress } from '../../../components/ui/Progress';
 import { Skeleton } from '../../../components/ui/Skeleton';
 import Sidebar from '../../../components/Sidebar';
+import { useSession } from "next-auth/react";
+import { redirect } from 'next/navigation';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -53,13 +55,17 @@ interface Performance {
 }
 
 export default function AppHealthPage() {
+  const { data: session } = useSession();
   const [timeRange, setTimeRange] = useState('live');
   const [healthStatus, setHealthStatus] = useState<HealthStatus | null>(null);
   const [detailedHealth, setDetailedHealth] = useState<DetailedHealth | null>(null);
   const [performance, setPerformance] = useState<Performance | null>(null);
   const [loading, setLoading] = useState({ health: false, detailed: false, performance: false });
   const [errors, setErrors] = useState<{ health: string | null; detailed: string | null; performance: string | null }>({ health: null, detailed: null, performance: null });
-
+  
+  if (!session || !session.user || session.user.role !== 'ADMIN') {
+    redirect('/auth/signin');
+  }
   const fetchAll = async () => {
     setLoading({ health: true, detailed: true, performance: true });
     setErrors({ health: null, detailed: null, performance: null });

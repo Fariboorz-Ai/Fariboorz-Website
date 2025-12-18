@@ -17,6 +17,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/Table';
 import { Skeleton } from '../../../components/ui/Skeleton';
 import Sidebar from '../../../components/Sidebar';
+import { useSession } from "next-auth/react";
+import { redirect } from 'next/navigation';
 
 interface SignalStats {
   total: number;
@@ -51,11 +53,15 @@ interface TradeManagerStatus {
 }
 
 export default function SignalsPage() {
+  const { data: session } = useSession();
   const [stats, setStats] = useState<SignalStats | null>(null);
   const [tradeManager, setTradeManager] = useState<TradeManagerStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
+  if (!session || !session.user || session.user.role !== 'ADMIN') {
+    redirect('/auth/signin');
+  }
   const fetchData = async () => {
     setLoading(true);
     try {

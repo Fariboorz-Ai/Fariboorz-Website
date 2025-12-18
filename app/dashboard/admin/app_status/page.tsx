@@ -17,6 +17,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/Table';
 import { Skeleton } from '../../../components/ui/Skeleton';
 import Sidebar from '../../../components/Sidebar';
+import { useSession } from "next-auth/react";
+import { redirect } from 'next/navigation';
 
 interface Signal {
   _id: string;
@@ -57,12 +59,17 @@ interface PrivateWsStatus {
 }
 
 export default function StatusPage() {
+  const { data: session } = useSession();
   const [status, setStatus] = useState<StatusData | null>(null);
   const [wsStatus, setWsStatus] = useState<WsStatus | null>(null);
   const [privateWsStatus, setPrivateWsStatus] = useState<PrivateWsStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
+
+  if (!session || !session.user || session.user.role !== 'ADMIN') {
+    redirect('/auth/signin');
+  }
   const fetchAll = async () => {
     setLoading(true);
     try {

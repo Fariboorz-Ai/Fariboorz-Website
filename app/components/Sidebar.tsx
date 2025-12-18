@@ -19,6 +19,7 @@ const navItems = [
   { href: "/dashboard/admin/app_status", label: "System Status", icon: "mdi:server-network", isAdmin: true  },
   { href: "/dashboard/admin/app_signals", label: "App Signals", icon: "mdi:signal", isAdmin: true  },
   { href: "/dashboard/admin/crash_history", label: "Crash History", icon: "mdi:file-chart", isAdmin: true  },
+  { href: "/dashboard/admin/admin_blog", label: "Manage Blog", icon: "mdi:book-open-page-variant", isAdmin: true  },
 ];
 
 export default function Sidebar() {

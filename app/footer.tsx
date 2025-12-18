@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { Button } from "./components/ui/Button";
 import Icon from "./components/Icon";
@@ -8,6 +9,7 @@ export default function Footer() {
     product: [
       { name: "Features", href: "#features" },
       { name: "Pricing", href: "#pricing" },
+      { name: "Blog", href: "/blog" },
     ],
     support: [
       { name: "Status", href: "#status" },
