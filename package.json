@@ -1,12 +1,16 @@
 {
   "name": "fariboorz-dashboard",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
+  },
+  "author": {
+    "name": "Hesam Ghanbari",
+    "url": "https://github.com/its-hesam"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.7.4",
