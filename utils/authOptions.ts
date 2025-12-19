@@ -3,7 +3,7 @@ import userModel from "@/app/models/userModel";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { connectDB } from "@/app/db";
-import clientPromise from "./MongoDbClient";
+import clientPromise from "./MongoDbClient"; // مسیر درست رو چک کن
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 
 export const authOptions: AuthOptions = {
@@ -30,11 +30,13 @@ export const authOptions: AuthOptions = {
         const isValid = await bcrypt.compare(password, user.password);
         if (!isValid) throw new Error("CREDENTIALS_MATCH_ERROR");
 
+        // اطلاعات ضروری کاربر رو برگردون
         return {
           id: user._id.toString(),
           email: user.email,
           name: user.name,
           role: user.role,
+          national_code: user.national_code,
         };
       },
     }),
@@ -63,37 +65,29 @@ export const authOptions: AuthOptions = {
       return !!user;
     },
 
+    // فقط موقع لاگین اطلاعات رو توی JWT ذخیره کن
     async jwt({ token, user }) {
-    
       if (user) {
         token.id = user.id;
-        token.role = user.role;
         token.email = user.email;
         token.name = user.name;
+        token.role = user.role;
+        token.national_code = user.national_code;
       }
       return token;
     },
 
+  
     async session({ session, token }) {
-      await connectDB();
-
-      if (token?.id) {
-        const freshUser = await userModel.findById(token.id).lean();
-        if (freshUser && !Array.isArray(freshUser)) {
-          session.user = {
-            id: freshUser._id?.toString(),
-            name: freshUser.name,
-            email: freshUser.email,
-            role: freshUser.role,
-            national_code: freshUser.national_code,
-          };
-
-          token.role = freshUser.role;
-          token.email = freshUser.email;
-          token.name = freshUser.name;
-        }
+      if (token) {
+        session.user = {
+          id: token.id as string,
+          email: token.email as string,
+          name: token.name as string,
+          role: token.role as string,
+          national_code: token.national_code as string,
+        };
       }
-
       return session;
     },
   },
