@@ -67,7 +67,7 @@ export default function SettingsPage() {
       try {
         setIsLoading(true);
         const result = await loadUserSettings();
-        console.log('Loaded settings:', result);
+
         if (result.success && result.data) {
           setSettings({
             ...result.data,

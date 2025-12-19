@@ -81,7 +81,7 @@ export async function loadUserSettings() {
     await connectDB();
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) throw new Error("User not authenticated");
-
+     console.log('Session user email:', session.user.email);
     const user = await userModel.findOne({ email: session.user.email });
     if (!user) throw new Error("User not found");
 
