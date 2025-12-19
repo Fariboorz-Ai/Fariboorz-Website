@@ -63,6 +63,19 @@ export async function loadStrategies() {
   }
 }
 
+const safeDecrypt = (value: any) => {
+      if (typeof value === 'string' && value.trim() !== '') {
+        try {
+          return decrypt(value);
+        } catch (err) {
+          console.error("Decryption failed:", err);
+          return ''; 
+        }
+      }
+      return '';
+    };
+
+
 export async function loadUserSettings() {
   try {
     await connectDB();
@@ -79,8 +92,8 @@ export async function loadUserSettings() {
       success: true,
       data: {
         exchangeName: user.exchange?.name || '',
-        apiKey: user.exchange?.apiKey ? decrypt(user.exchange.apiKey) : '',       
-        apiSecret: user.exchange?.apiSecret ? decrypt(user.exchange.apiSecret) : '', 
+        apiKey: safeDecrypt(user.exchange?.apiKey),
+        apiSecret: safeDecrypt(user.exchange?.apiSecret),
 
         strategyId: user.trade_settings?.strategyId?.toString() || '',
         leverage: user.trade_settings?.leverage || 10,
@@ -89,7 +102,7 @@ export async function loadUserSettings() {
         tradeLimit: user.trade_settings?.tradeLimit || 5,
         tradingActive: user.trade_settings?.isActive ?? true,
 
-        telegramToken: user.telegram?.token ? decrypt(user.telegram.token) : '',   
+         telegramToken: safeDecrypt(user.telegram?.token),
         telegramChatId: user.telegram?.chatId || '',
         telegramActive: user.telegram?.isActive ?? false,
 
