@@ -1,8 +1,8 @@
 import React from "react";
-import Header from "../../../header";
-import Footer from "../../../footer";
-import { connectDB } from "../../../db";
-import Blog from "../../../models/blogModel";
+import Header from "@/app/header";
+import Footer from "@/app/footer";
+import { connectDB } from "@/app/db";
+import Blog, { IBlog } from "@/app/models/blogModel";
 import Link from "next/link";
 import { format } from "date-fns";
 import { notFound } from "next/navigation";
@@ -10,12 +10,14 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
-import { FaCalendarAlt, FaClock, FaUser, FaArrowLeft, FaShareAlt, FaBookmark, FaEye } from "react-icons/fa";
-import { Button } from "@/app/components/ui/Button";
+import Icon from "@/app/components/Icon";
+import mongoose from "mongoose";
 import Image from "next/image";
+import { Metadata } from 'next';
+
 
 interface Props {
-  params: Promise<{ slug: string }>;  
+  params: Promise<{ slug: string }>;
 }
 
 
@@ -25,12 +27,25 @@ type BlogItem = {
   description: string;
   thumbnail?: string;
   slug?: string;
-  createdAt?: string;
+  createdAt?: Date | string;
   author?: { name?: string } | null;
   message?: string;
 };
 
-async function getPostBySlug(slug: string) {
+type PopulatedAuthor = { _id: mongoose.Types.ObjectId; name?: string } | null;
+type PopulatedBlog = Omit<IBlog, 'author'> & { author: PopulatedAuthor };
+
+type RecommendedItem = {
+  _id: mongoose.Types.ObjectId;
+  title: string;
+  slug: string;
+  description: string;
+  thumbnail?: string | null;
+  publishedAt?: Date;
+  views?: number;
+};
+
+async function getPostBySlug(slug: string): Promise<PopulatedBlog | null> {
   await connectDB();
   const post = await Blog.findOneAndUpdate(
     { slug },
@@ -40,19 +55,59 @@ async function getPostBySlug(slug: string) {
   return post;
 }
 
-async function getRecommended(slug: string, limit = 3) {
+async function getRecommended(slug: string, limit = 3): Promise<RecommendedItem[]> {
   await connectDB();
-  const docs = await Blog.find({ slug: { $ne: slug } })
+  const docs = await Blog.find<IBlog>({ slug: { $ne: slug } })
     .sort({ publishedAt: -1 })
     .limit(limit)
     .select("title slug description thumbnail publishedAt views")
     .lean();
-  return docs;
+  return docs as unknown as RecommendedItem[];
 }
 
-export default async function BlogPage({ params }: Props) {
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug); 
+
+  if (!post || !post.isPublished) {
+    return {
+      title: 'Article Not Found',
+      description: 'The requested blog post could not be found.',
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const title = `${post.title} | Fariboorz AI Blog`;
+  const description = post.description || 'In-depth trading and AI signals analysis from Fariboorz AI experts.';
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/blog/posts/${post.slug}` },
+    openGraph: {
+      title,
+      description,
+      url: `https://fariboorzai.com/blog/posts/${post.slug}`,
+      type: 'article',
+      publishedTime: post.createdAt?.toISOString(),
+      modifiedTime: post.updatedAt?.toISOString(),
+      images: post.thumbnail ? [{ url: post.thumbnail, width: 1200, height: 630, alt: post.title }] : ['/og-image.jpg'],
+      authors: [post.author?.name || 'Fariboorz AI'],
+      section: 'Trading Blog',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: post.thumbnail ? [post.thumbnail] : ['/og-image.jpg'],
+    },
+  };
+}
+
+const BlogPost = async({ params }: Props) => {
  const { slug } = await params;
-  const postDoc: any = await getPostBySlug(slug);
+  const postDoc = await getPostBySlug(slug);
 
   if (!postDoc) {
     notFound();
@@ -98,13 +153,13 @@ export default async function BlogPage({ params }: Props) {
                   </p>
                       <div className="flex flex-wrap items-center gap-4 text-white/80 mb-4">
                     <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                      <FaUser className="text-sm" />
+                      <Icon icon="fa-solid:user" className="text-sm" />
                       <span className="text-sm font-medium">
                         {post.author?.name || "Admin"}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                      <FaCalendarAlt className="text-sm" />
+                      <Icon icon="fa-solid:calendar-alt" className="text-sm" />
                       <time className="text-sm">
                         {post.createdAt
                           ? format(new Date(post.createdAt), "PPP")
@@ -112,7 +167,7 @@ export default async function BlogPage({ params }: Props) {
                       </time>
                     </div>
                     <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                      <FaClock className="text-sm" />
+                      <Icon icon="fa-solid:clock" className="text-sm" />
                       <span className="text-sm">
                         {postDoc.readingTime
                           ? `${postDoc.readingTime} min read`
@@ -120,7 +175,7 @@ export default async function BlogPage({ params }: Props) {
                       </span>
                     </div>
                     <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                      <FaEye className="text-sm" />
+                      <Icon icon="fa-solid:eye" className="text-sm" />
                       <span className="text-sm">{postDoc.views || 0} views</span>
                     </div>
                   </div>
@@ -133,13 +188,13 @@ export default async function BlogPage({ params }: Props) {
             <div className="space-y-6">
               <div className="flex flex-wrap items-center gap-4 text-muted-foreground mb-4">
                 <div className="flex items-center gap-2 bg-base-200 px-3 py-1.5 rounded-full">
-                  <FaUser className="text-sm" />
+                  <Icon icon="fa-solid:user" className="text-sm" />
                   <span className="text-sm font-medium">
                     {post.author?.name || "Fariboorz"}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 bg-base-200 px-3 py-1.5 rounded-full">
-                  <FaCalendarAlt className="text-sm" />
+                    <div className="flex items-center gap-2 bg-base-200 px-3 py-1.5 rounded-full">
+                      <Icon icon="fa-solid:calendar-alt" className="text-sm" />
                   <time className="text-sm">
                     {post.createdAt
                       ? format(new Date(post.createdAt), "PPP")
@@ -147,7 +202,7 @@ export default async function BlogPage({ params }: Props) {
                   </time>
                 </div>
                 <div className="flex items-center gap-2 bg-base-200 px-3 py-1.5 rounded-full">
-                  <FaClock className="text-sm" />
+                      <Icon icon="fa-solid:clock" className="text-sm" />
                   <span className="text-sm">
                     {postDoc.readingTime
                       ? `${postDoc.readingTime} min read`
@@ -155,7 +210,7 @@ export default async function BlogPage({ params }: Props) {
                   </span>
                 </div>
                 <div className="flex items-center gap-2 bg-base-200 px-3 py-1.5 rounded-full">
-                  <FaEye className="text-sm" />
+                      <Icon icon="fa-solid:eye" className="text-sm" />
                   <span className="text-sm">{postDoc.views || 0} views</span>
                 </div>
               </div>
@@ -208,9 +263,9 @@ export default async function BlogPage({ params }: Props) {
                   </span>
                 </h2>
                 <div className="space-y-4">
-                  {recommended.map((r: any) => (
+                  {recommended.map((r: RecommendedItem) => (
                     <Link
-                      key={r._id}
+                      key={String(r._id)}
                       href={`/blog/posts/${r.slug}`}
                       className="block group"
                     >
@@ -229,17 +284,15 @@ export default async function BlogPage({ params }: Props) {
                             {r.title}
                           </h3>
                           <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-                            <FaCalendarAlt />
+                            <Icon icon="fa-solid:calendar-alt" />
                             <time>
-                              {r.publishedAt
-                                ? format(new Date(r.publishedAt), "MMM d")
-                                : ""}
+              {r.publishedAt ? format(new Date(r.publishedAt), "MMM d") : ""}
                             </time>
                             {r.views && (
                               <>
                                 <span>•</span>
                                 <div className="flex items-center gap-1">
-                                  <FaEye className="text-xs" />
+                                  <Icon icon="fa-solid:eye" className="text-xs" />
                                   <span>{r.views}</span>
                                 </div>
                               </>
@@ -268,9 +321,9 @@ export default async function BlogPage({ params }: Props) {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recommended.map((r: any) => (
+                      {recommended.map((r: RecommendedItem) => (
               <Link
-                key={r._id}
+                key={String(r._id)}
                 href={`/blog/posts/${r.slug}`}
                 className="group"
               >
@@ -288,7 +341,7 @@ export default async function BlogPage({ params }: Props) {
                   <div className="p-6 space-y-4">
                     <div className="flex items-center gap-3 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
-                        <FaCalendarAlt className="text-xs" />
+                          <Icon icon="fa-solid:calendar-alt" className="text-xs" />
                         <time>
                           {r.publishedAt
                             ? format(new Date(r.publishedAt), "MMM d, yyyy")
@@ -297,7 +350,7 @@ export default async function BlogPage({ params }: Props) {
                       </div>
                       {r.views && (
                         <div className="flex items-center gap-1">
-                          <FaEye className="text-xs" />
+                          <Icon icon="fa-solid:eye" className="text-xs" />
                           <span>{r.views}</span>
                         </div>
                       )}
@@ -338,3 +391,5 @@ export default async function BlogPage({ params }: Props) {
     </div>
   );
 }
+
+export default BlogPost;

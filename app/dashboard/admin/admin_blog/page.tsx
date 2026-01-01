@@ -1,23 +1,18 @@
 import { format } from 'date-fns';
-import {
-  BsPlusCircle, BsEye, BsCalendar3, BsTrash3,
-  BsSearch, BsFilter, BsActivity, BsFileText, BsClockHistory
-} from 'react-icons/bs';
+import Icon from '@/app/components/Icon';
 import {
   Card, CardContent, CardHeader, CardTitle
-} from '../../../components/ui/Card';
-import { Button } from '../../../components/ui/Button';
-import { Input } from '../../../components/ui/Input';
-import { Badge } from '../../../components/ui/Badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/Table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/Select';
-import Sidebar from '../../../components/Sidebar';
+} from '@/app/components/ui/Card';
+import { Button } from '@/app/components/ui/Button';
+import { Badge } from '@/app/components/ui/Badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/app/components/ui/Table';
+import Sidebar from '@/app/components/Sidebar';
 import dotenv from 'dotenv';
-import { connectDB } from '../../../../app/db';
-import Blog from '../../../../app/models/blogModel';
-import Users from '../../../../app/models/userModel';
+import mongoose from 'mongoose';
+import { connectDB } from '@/app/db';
+import Blog from '@/app/models/blogModel';
+import Users from '@/app/models/userModel';
 import  Link  from 'next/link';
-import { revalidatePath } from 'next/cache';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/utils/authOptions";
 import { redirect } from 'next/navigation';
@@ -30,18 +25,30 @@ export default async function AdminBlogPage() {
   
 
   await connectDB();
-  const docs = await Blog.find().sort({ publishedAt: -1, createdAt: -1 }).populate('author', 'name').lean();
-  const users = await Users.find().select('_id name').lean();
+  const docs = await Blog.find()
+    .sort({ publishedAt: -1, createdAt: -1 })
+    .populate('author', 'name')
+    .lean() as unknown as Array<{
+      _id: mongoose.Types.ObjectId;
+      title: string;
+      slug: string;
+      thumbnail?: string | null;
+      author?: { _id?: mongoose.Types.ObjectId; name?: string } | string | null;
+      createdAt?: Date | string;
+      views?: number;
+      isPublished?: boolean;
+    }>;
+  const users = await Users.find().select('_id name').lean() as unknown as Array<{ _id: mongoose.Types.ObjectId; name?: string }>;
    
 
-  const blogs = docs.map((b: any) => {
+  const blogs = docs.map((b) => {
 
     let author: { _id?: any; name?: string } | null = null;
     if (b.author) {
-      if (typeof b.author === 'object' && b.author.name) {
+      if (typeof b.author === 'object' && 'name' in b.author && b.author.name) {
         author = { _id: b.author._id, name: b.author.name };
       } else {
-        const u = users.find((u: any) => String(u._id) === String(b.author));
+        const u = users.find((u) => String(u._id) === String(b.author));
         if (u) author = { _id: u._id, name: u.name };
       }
     }
@@ -58,7 +65,7 @@ export default async function AdminBlogPage() {
     };
   });
   
-   const session: any = await getServerSession(authOptions as any);
+  const session = (await getServerSession(authOptions as any)) as import('next-auth').Session | null;
   const totalPosts = blogs.length;
   const publishedPosts = blogs.filter(b => b.isPublished).length;
   const draftPosts = blogs.filter(b => !b.isPublished).length;
@@ -84,14 +91,14 @@ export default async function AdminBlogPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: "Total Posts", value: totalPosts, icon: BsFileText, color: "text-primary" },
-            { label: "Published", value: publishedPosts, icon: BsActivity, color: "text-success" },
-            { label: "Drafts", value: draftPosts, icon: BsClockHistory, color: "text-warning" },
-            { label: "Total Views", value: totalViews.toLocaleString(), icon: BsEye, color: "text-info" },
-          ].map((item, i) => (
+                    { label: "Total Posts", value: totalPosts, icon: 'fa-solid:newspaper', color: "text-primary" },
+                    { label: "Published", value: publishedPosts, icon: 'fa-solid:chart-line', color: "text-success" },
+                    { label: "Drafts", value: draftPosts, icon: 'fa-solid:clock', color: "text-warning" },
+                    { label: "Total Views", value: totalViews.toLocaleString(), icon: 'fa-solid:eye', color: "text-info" },
+                  ].map((item: { label: string; value: string | number; icon: string; color: string }, i) => (
             <Card 
               key={i} 
-              className="bg-card/90 backdrop-blur-sm border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg"
+              className="bg-card/90 backdrop-blur-sm border-border/50 hover:border-primary/50 transition-all duration-300 text-3xl hover:shadow-lg"
             >
               <CardContent className="p-5">
                 <div className="flex items-center justify-between">
@@ -99,7 +106,7 @@ export default async function AdminBlogPage() {
                     <p className="text-sm text-muted-foreground">{item.label}</p>
                     <p className={`text-2xl font-bold ${item.color}`}>{item.value}</p>
                   </div>
-                  <item.icon className={`w-8 h-8 ${item.color} opacity-80`} />
+                          <Icon icon={item.icon} className={`w-8 h-8 ${item.color} opacity-80`} />
                 </div>
               </CardContent>
             </Card>
@@ -110,7 +117,7 @@ export default async function AdminBlogPage() {
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <Button asChild size="lg" className="shadow-lg hover:shadow-xl transition-shadow">
             <Link href="/dashboard/admin/admin_blog/create_post" className="flex items-center gap-2">
-              <BsPlusCircle className="w-5 h-5" />
+              <Icon icon="fa-solid:plus-circle" className="w-5 h-5" />
               Create New Post
             </Link>
           </Button>
@@ -178,7 +185,7 @@ export default async function AdminBlogPage() {
                         <TableCell>
                           {b.createdAt ? (
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <BsCalendar3 className="w-4 h-4 text-muted-foreground" />
+                              <Icon icon="fa-solid:calendar-alt" className="w-4 h-4 text-muted-foreground" />
                               {format(new Date(b.createdAt), 'PPP')}
                             </div>
                           ) : (
@@ -188,7 +195,7 @@ export default async function AdminBlogPage() {
 
                         <TableCell className="text-center">
                           <div className="flex items-center justify-center gap-2">
-                            <BsEye className="w-4 h-4 text-muted-foreground" />
+                            <Icon icon="fa-solid:eye" className="w-4 h-4 text-muted-foreground" />
                             <span className="font-medium text-muted-foreground">{b.views ?? 0}</span>
                           </div>
                         </TableCell>
@@ -211,7 +218,7 @@ export default async function AdminBlogPage() {
                             <form action={deleteBlogAction} className="inline">
                               <input type="hidden" name="slug" value={b.slug} />
                               <Button type="submit" variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/10">
-                                <BsTrash3 className="w-4 h-4" />
+                                <Icon icon="fa-solid:trash" className="w-4 h-4" />
                                 <span className="ml-1">Delete</span>
                               </Button>
                             </form>

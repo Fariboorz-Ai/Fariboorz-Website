@@ -3,11 +3,13 @@ import { authOptions } from "@/utils/authOptions";
 import { connectDB } from "@/app/db";
 import tradeModel from "@/app/models/tradeModel";
 import userModel from "@/app/models/userModel";
-import Sidebar from '../../components/Sidebar';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '../../components/ui/Accordion';
-import Icon from '../../components/Icon';
+import Sidebar from '@/app/components/Sidebar';
+import { Card, CardHeader, CardTitle, CardContent } from '@/app/components/ui/Card';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/app/components/ui/Accordion';
+import Icon from '@/app/components/Icon';
 import { redirect } from "next/navigation";
+import Image from 'next/image';
+import { getCryptoLogo } from "@/utils/utils";
 
 async function getTradesData(userId: string) {
   await connectDB();
@@ -18,10 +20,21 @@ async function getTradesData(userId: string) {
     .limit(50)
     .lean(); 
   
-  const user = await userModel.findById(userId).lean().lean(); 
+  const user = await userModel.findById(userId).lean();
+  
+ 
+  const tradesWithLogos = await Promise.all(
+    trades.map(async (trade: any) => {
+      const logo = await getCryptoLogo(trade.symbol);
+      return {
+        ...trade,
+        logo
+      };
+    })
+  );
   
   return {
-    trades,
+    trades: tradesWithLogos,
     user
   };
 }
@@ -118,6 +131,26 @@ export default async function TradesHistoryPage() {
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
     return `${diffDays}d ago`;
+  };
+
+  
+  const getCryptoName = (symbol: string) => {
+    const parts = symbol.split('/');
+    if (parts.length > 0) {
+      const cryptoName = parts[0];
+      const cleanName = cryptoName.replace(/USDT|USD$/i, '');
+      return parts;
+    }
+    return symbol;
+  };
+
+
+  const getCryptoPair = (symbol: string) => {
+    const parts = symbol.split('/');
+    if (parts.length > 1) {
+      return parts[1];
+    }
+    return 'USD';
   };
 
   return (
@@ -229,14 +262,45 @@ export default async function TradesHistoryPage() {
 
              
                 <Accordion type="single" collapsible className="divide-y divide-base-300/30">
-                  {trades.map((trade: any) => (
-                  <AccordionItem key={String(trade._id)} value={String(trade._id)} className="border-0">
+                  {trades.map((trade: any) => {
+                    const cryptoName = getCryptoName(trade.symbol);
+                    const cryptoPair = getCryptoPair(trade.symbol);
+                    
+                    return (
+                    <AccordionItem key={String(trade._id)} value={String(trade._id)} className="border-0">
                       <AccordionTrigger className="px-6 py-4 hover:bg-base-200/30 transition-colors">
                         <div className="grid grid-cols-12 gap-4 items-center w-full">
                     
                           <div className="col-span-2 flex items-center gap-3">
-                            <div className="w-20 h-45 bg-gradient-to-br from-primary/20 to-accent/40 rounded-lg flex items-center justify-center">
-                              <span className="font-bold text-base-content">{trade.symbol.split('/')[0]}</span>
+                            <div className="flex items-center gap-3">
+                          
+                              <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-primary/20 to-accent/20 border border-base-300/30">
+                                {trade.logo ? (
+                                  <Image
+                                    src={trade.logo}
+                                    alt={trade.symbol}
+                                    fill
+                                    className="object-cover"
+                                    sizes="40px"
+                                    unoptimized
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center bg-base-200">
+                                    <Icon icon="mdi:currency-usd" className="w-5 h-5 text-base-content/40" />
+                                  </div>
+                                )}
+                              </div>
+                              
+                            
+                              <div className="flex flex-col">
+                                <div className="flex items-center gap-1">
+                             
+                                  <span className="text-xs text-success bg-success/10 px-1.5 py-0.5 rounded">
+                                    {trade.symbol}
+                                  </span>
+                                </div>
+                                
+                              </div>
                             </div>
                           </div>
 
@@ -288,6 +352,47 @@ export default async function TradesHistoryPage() {
                       
                       <AccordionContent className="px-6 pb-4">
                         <div className="bg-base-200/30 rounded-xl border border-base-300/40 p-6 space-y-6">
+                        
+                          <div className="flex items-center gap-4 mb-6 pb-4 border-b border-base-300/30">
+                            <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/30 to-accent/30 border-2 border-base-300/40">
+                              {trade.logo ? (
+                                <Image
+                                  src={trade.logo}
+                                  alt={trade.symbol}
+                                  fill
+                                  className="object-cover"
+                                  sizes="64px"
+                                  unoptimized
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-base-200">
+                                  <Icon icon="mdi:currency-usd-circle" className="w-8 h-8 text-base-content/40" />
+                                </div>
+                              )}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-3 mb-1">
+                                <h3 className="text-2xl font-bold text-base-content">{cryptoName}</h3>
+                                <div className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+                                  <span className="text-primary font-semibold text-sm">{trade.symbol}</span>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-4 text-sm text-base-content/60">
+                                <span className="flex items-center gap-1">
+                                  <Icon icon="mdi:exchange" className="w-4 h-4" />
+                                  {trade.exchange}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <Icon icon="mdi:currency-usd" className="w-4 h-4" />
+                                  vs {cryptoPair}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <Icon icon="mdi:calendar-clock" className="w-4 h-4" />
+                                  {formatDate(trade.createdAt)}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
                      
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             <div className="space-y-2">
@@ -403,7 +508,8 @@ export default async function TradesHistoryPage() {
                         </div>
                       </AccordionContent>
                     </AccordionItem>
-                  ))}
+                    );
+                  })}
                 </Accordion>
               </div>
             ) : (

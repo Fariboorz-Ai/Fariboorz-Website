@@ -4,11 +4,12 @@ import { connectDB } from "@/app/db";
 import userModel from "@/app/models/userModel";
 import tradeModel from "@/app/models/tradeModel";
 import notificationModel from "@/app/models/notificationModel";
-import Sidebar from "../components/Sidebar";
-import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/Card";
-import { AreaChartComponent as AreaChart } from "../components/charts/AreaChart";
+import Sidebar from "@/app/components/Sidebar";
+import { Card, CardHeader, CardTitle, CardContent } from "@/app/components/ui/Card";
+import { AreaChartComponent as AreaChart } from "@/app/components/charts/AreaChart";
 import Icon from "../components/Icon";
 import { redirect } from "next/navigation";
+
 
 async function getDashboardData(userId: string) {
   await connectDB();
@@ -37,21 +38,98 @@ async function getDashboardData(userId: string) {
     : 0;
   
  
-  const portfolioData = [];
-  const today = new Date();
-  for (let i = 6; i >= 0; i--) {
-    const date = new Date(today);
-    date.setDate(date.getDate() - i);
-    const dayTrades = closedTrades.filter(trade => 
-      trade.updatedAt && 
-      trade.updatedAt.toDateString() === date.toDateString()
+  const cumulativePnLData = [];
+  
+  
+  if (closedTrades.length > 0) {
+   
+    const dates = [];
+    const today = new Date();
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      dates.push(date);
+    }
+    
+    
+    const sortedClosedTrades = [...closedTrades].sort((a, b) => 
+      new Date(a.updatedAt || a.createdAt).getTime() - new Date(b.updatedAt || b.createdAt).getTime()
     );
-    const dayProfit = dayTrades.reduce((sum, trade) => sum + (trade.profitLoss || 0), 0);
-    portfolioData.push({
-      date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      value: Math.max(0, 10000 + dayProfit)
+    
+    let cumulativePnL = 0;
+    let tradeIndex = 0;
+    
+ 
+    dates.forEach((date, index) => {
+    
+      const dateLabel = date.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric' 
+      });
+      
+    
+      let dayPnL = 0;
+      while (tradeIndex < sortedClosedTrades.length) {
+        const trade = sortedClosedTrades[tradeIndex];
+        const tradeCloseDate = new Date(trade.updatedAt || trade.createdAt);
+        
+       
+        if (
+          tradeCloseDate.getDate() === date.getDate() &&
+          tradeCloseDate.getMonth() === date.getMonth() &&
+          tradeCloseDate.getFullYear() === date.getFullYear()
+        ) {
+          dayPnL += trade.profitLoss || 0;
+          tradeIndex++;
+        } else if (tradeCloseDate < date) {
+         
+          dayPnL += trade.profitLoss || 0;
+          tradeIndex++;
+        } else {
+         
+          break;
+        }
+      }
+      
+      cumulativePnL += dayPnL;
+      
+      cumulativePnLData.push({
+        date: dateLabel,
+        value: cumulativePnL,
+        dailyPnL: dayPnL
+      });
     });
+  } else if (allTrades.length > 0) {
+
+    const today = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      cumulativePnLData.push({
+        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        value: 0,
+        dailyPnL: 0
+      });
+    }
+  } else {
+
+    const today = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      cumulativePnLData.push({
+        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        value: 0,
+        dailyPnL: 0
+      });
+    }
   }
+  
+
+  const winningTrades = closedTrades.filter(trade => (trade.profitLoss || 0) > 0);
+  const losingTrades = closedTrades.filter(trade => (trade.profitLoss || 0) < 0);
+  const maxWin = winningTrades.length > 0 ? Math.max(...winningTrades.map(t => t.profitLoss || 0)) : 0;
+  const maxLoss = losingTrades.length > 0 ? Math.min(...losingTrades.map(t => t.profitLoss || 0)) : 0;
   
   return {
     user,
@@ -63,9 +141,13 @@ async function getDashboardData(userId: string) {
       closedTrades: closedTrades.length,
       totalProfitLoss,
       winRate,
-      averageProfit: closedTrades.length > 0 ? totalProfitLoss / closedTrades.length : 0
+      averageProfit: closedTrades.length > 0 ? totalProfitLoss / closedTrades.length : 0,
+      maxWin,
+      maxLoss,
+      winningTrades: winningTrades.length,
+      losingTrades: losingTrades.length
     },
-    portfolioData
+    cumulativePnLData
   };
 }
 
@@ -177,42 +259,62 @@ export default async function DashboardPage() {
             <CardHeader className="pb-2">
               <CardTitle className="text-accent text-sm font-medium flex items-center gap-2">
                 <Icon icon="mdi:robot" className="w-4 h-4" />
-                Trading Status
+                Trading Performance
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-baseline gap-2">
-                <p className="text-2xl font-bold text-foreground">
-                  {data.user?.trade_settings?.isActive ? 'Active' : 'Inactive'}
+              <div className="space-y-2">
+                <p className="text-xl font-bold text-foreground">
+                  {data.stats.winningTrades}W / {data.stats.losingTrades}L
                 </p>
-              </div>
-              <div className="mt-2">
-                <div className="flex items-center gap-2 text-sm">
-                  <Icon icon="mdi:exchange" className="w-4 h-4 text-accent" />
-                  <span className="text-accent">
-                    {data.user?.exchange?.name ? data.user.exchange.name.toUpperCase() : 'No Exchange'}
-                  </span>
+                <div className="flex items-center gap-4 text-sm">
+                  <div className="flex items-center gap-1">
+                    <Icon icon="mdi:trending-up" className="w-4 h-4 text-success" />
+                    <span className="text-success">Best: {formatCurrency(data.stats.maxWin)}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Icon icon="mdi:trending-down" className="w-4 h-4 text-primary" />
+                    <span className="text-primary">Worst: {formatCurrency(data.stats.maxLoss)}</span>
+                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-   
-  <Card className="p-6 mb-8 bg-card/80 backdrop-blur border border-border/50 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all">
+      
+        <Card className="p-6 mb-8 bg-card/80 backdrop-blur border border-border/50 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-foreground">Portfolio Performance (Last 7 Days)</h3>
+            <h3 className="text-lg font-semibold text-foreground">Cumulative Profit/Loss (Last 30 Days)</h3>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-primary rounded-full"></div>
-                <span>Portfolio Value</span>
+                <span>Cumulative PnL</span>
               </div>
             </div>
           </div>
           <AreaChart
-            data={data.portfolioData}
+            data={data.cumulativePnLData.map(item => ({
+              date: item.date,
+              value: item.value
+            }))}
             height={300}
+            showZeroLine={true}
+            positiveColor="#10b981"
+            negativeColor="#ef4444"
           />
+          <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
+            <div className="text-center">
+              <p className="text-muted-foreground">Current PnL</p>
+              <p className={`font-semibold ${data.stats.totalProfitLoss >= 0 ? 'text-success' : 'text-primary'}`}>
+                {formatCurrency(data.stats.totalProfitLoss)}
+              </p>
+            </div>
+            <div className="text-center">
+              <p className="text-muted-foreground">Trade Count</p>
+              <p className="font-semibold text-foreground">{data.stats.closedTrades} trades</p>
+            </div>
+          </div>
         </Card>
 
      
@@ -356,4 +458,3 @@ export default async function DashboardPage() {
     </div>
   );
 }
-

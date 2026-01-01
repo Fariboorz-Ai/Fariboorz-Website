@@ -1,14 +1,13 @@
 "use client";
-
 import React, { useActionState, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { Input } from "../../../../components/ui/Input";
-import { Button } from "../../../../components/ui/Button";
-import { Label } from "../../../../components/ui/Label";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/Card";
-import Sidebar from "../../../../components/Sidebar";
+import { Input } from "@/app/components/ui/Input";
+import { Button } from "@/app/components/ui/Button";
+import { Label } from "@/app/components/ui/Label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/Card";
+import Sidebar from "@/app/components/Sidebar";
 import { createBlogAction } from "./actions";
 import { useSession } from "next-auth/react";
 import Image from "next/image";

@@ -2,25 +2,21 @@
 import { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
-import {
-  BsBarChartFill, BsPieChartFill, BsArrowUpRight, BsCalendar, BsFilter,
-  BsServer, BsPlug, BsMemory, BsCpu, BsActivity, BsExclamationTriangle,
-  BsCheckCircle, BsXCircle, BsClock, BsDatabase, BsWifi, BsWifiOff
-} from 'react-icons/bs';
-import api from '../../../../utils/api'
+import Icon from '@/app/components/Icon';
+import api from '@/utils/api'
 import {
   Card, CardContent, CardHeader, CardTitle
-} from '../../../components/ui/Card';
-import { Button } from '../../../components/ui/Button';
+} from '@/app/components/ui/Card';
+import { Button } from '@/app/components/ui/Button';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue
-} from '../../../components/ui/Select';
-import { Badge } from '../../../components/ui/Badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/Tabs';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/Table';
-import { Progress } from '../../../components/ui/Progress';
-import { Skeleton } from '../../../components/ui/Skeleton';
-import Sidebar from '../../../components/Sidebar';
+} from '@/app/components/ui/Select';
+import { Badge } from '@/app/components/ui/Badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/Tabs';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/app/components/ui/Table';
+import { Progress } from '@/app/components/ui/Progress';
+import { Skeleton } from '@/app/components/ui/Skeleton';
+import Sidebar from '@/app/components/Sidebar';
 import { useSession } from "next-auth/react";
 import { redirect } from 'next/navigation';
 import dotenv from 'dotenv';
@@ -120,8 +116,8 @@ export default function AppHealthPage() {
 
   const getConnectionStatus = (conn: any) => {
     return conn.status.isConnected ? 
-      <Badge className="bg-success/20 text-success"><BsWifi className="w-3 h-3 mr-1" />Connected</Badge> :
-      <Badge className="bg-error/20 text-error"><BsWifiOff className="w-3 h-3 mr-1" />Disconnected</Badge>;
+      <Badge className="bg-success/20 text-success"><Icon icon="fa-solid:wifi" className="w-3 h-3 mr-1" />Connected</Badge> :
+      <Badge className="bg-error/20 text-error"><Icon icon="fa-solid:wifi-slash" className="w-3 h-3 mr-1" />Disconnected</Badge>;
   };
 
   return (
@@ -143,9 +139,9 @@ export default function AppHealthPage() {
 
       
         <div className="flex flex-wrap gap-4 items-center">
-          <div className="flex items-center gap-2">
-            <BsActivity className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Auto-refresh: 10s</span>
+      <div className="flex items-center gap-2">
+        <Icon icon="fa-solid:chart-line" className="w-4 h-4 text-muted-foreground" />
+        <span className="text-sm font-medium">Auto-refresh: 10s</span>
           </div>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger className="w-40">
@@ -158,28 +154,28 @@ export default function AppHealthPage() {
             </SelectContent>
           </Select>
           <Button onClick={fetchAll} size="sm" className="ml-auto">
-            <BsCalendar className="w-4 h-4 mr-2" /> Refresh Now
+            <Icon icon="fa-solid:sync" className="w-4 h-4 mr-2 " /> Refresh Now
           </Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: "Overall", value: detailedHealth?.overall || healthStatus?.status || 'unknown', icon: BsCheckCircle },
-            { label: "Uptime", value: performance?.uptime || formatUptime(healthStatus?.uptime || 0), icon: BsClock },
-            { label: "Memory", value: performance?.memory?.heapUsed || 'N/A', icon: BsMemory },
-            { label: "CPU", value: performance?.cpu?.user || 'N/A', icon: BsCpu },
-          ].map((item, i) => (
+            { label: "Overall", value: detailedHealth?.overall || healthStatus?.status || 'unknown', icon: 'fa-solid:check-circle' },
+            { label: "Uptime", value: performance?.uptime || formatUptime(healthStatus?.uptime || 0), icon: 'fa-solid:clock' },
+            { label: "Memory", value: performance?.memory?.heapUsed || 'N/A', icon: 'fa-solid:microchip' },
+            { label: "CPU", value: performance?.cpu?.user || 'N/A', icon: 'fa-solid:microchip' },
+          ].map((item: { label: string; value: string | number; icon: string }, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
               <Card className="bg-card/80 backdrop-blur border-border/50">
                 <CardContent className="p-5">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-muted-foreground">{item.label}</p>
-                      <p className={`text-xl font-bold ${getStatusColor(item.value)}`}>
+                      <p className={`text-xl font-bold ${getStatusColor(String(item.value))}`}>
                         {item.value}
                       </p>
                     </div>
-                    <item.icon className="w-8 h-8 text-primary/70" />
+                    <Icon icon={item.icon} className="w-8 h-8 text-primary/70" />
                   </div>
                 </CardContent>
               </Card>
@@ -202,8 +198,8 @@ export default function AppHealthPage() {
           
               <Card className="bg-card border-border">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-foreground">
-                    <BsServer className="w-5 h-5 text-primary" /> Strategies & Signals
+                    <CardTitle className="flex items-center gap-2 text-foreground">
+                    <Icon icon="fa-solid:server" className="w-5 h-5 text-primary" /> Strategies & Signals
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -231,7 +227,7 @@ export default function AppHealthPage() {
               <Card className="bg-card border-border">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-foreground">
-                    <BsCheckCircle className="w-5 h-5 text-primary" /> Health Checks
+                    <Icon icon="fa-solid:check-circle" className="w-5 h-5 text-primary" /> Health Checks
                   </CardTitle>
                 </CardHeader>
                 <CardContent>

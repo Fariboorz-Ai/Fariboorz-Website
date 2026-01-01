@@ -99,6 +99,7 @@ const config: Config = {
     },
     extend: {
       ...shadcnThemeExtend,
+      
       colors: {
         ...shadcnThemeExtend.colors,
         
@@ -159,11 +160,16 @@ const config: Config = {
         "pulse-red": "pulse-red 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
       backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'gradient-red': 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
-        'gradient-dark': 'linear-gradient(135deg, #111827 0%, #000000 100%)',
+         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+    'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+    'gradient-red': 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
+    'gradient-dark': 'linear-gradient(135deg, #111827 0%, #000000 100%)',
+    'gradient-primary': 'linear-gradient(135deg, #dc2626 0%, #ea580c 100%)',
       },
+       boxShadow: {
+    'glow': '0 0 20px rgba(220, 38, 38, 0.3)',
+    'glow-lg': '0 0 40px rgba(220, 38, 38, 0.5)',
+  }
     },
   },
   plugins: [require("tailwindcss-animate"), require("daisyui")],

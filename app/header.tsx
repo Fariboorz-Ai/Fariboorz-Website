@@ -42,9 +42,11 @@ export default function Header() {
 
   const navItems = [
     { name: "Features", href: "#features" },
-    { name: "Pricing", href: "#pricing" },
+    // { name: "Pricing", href: "#pricing" },
     { name: "About", href: "#about" },
-    { name: "blog", href: "/blog" },
+    { name: "Blog", href: "/blog" },
+    { name: "Signals", href: "/free-signals" },
+    { name: "Performance", href: "/performance" },
   ];
  
   return (

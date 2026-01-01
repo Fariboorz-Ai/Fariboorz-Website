@@ -1,11 +1,12 @@
 import React from "react";
-import Header from "../header";
-import Footer from "../footer";
-import { connectDB } from "../db";
-import Blog from "../models/blogModel";
+import Header from "@/app/header";
+import Footer from "@/app/footer";
+import { connectDB } from "@/app/db";
+import Blog, { IBlog } from "@/app/models/blogModel";
 import Link from "next/link";
 import { format } from "date-fns";
-import { FaCalendarAlt, FaClock, FaArrowRight, FaFire, FaBookOpen, FaEye } from "react-icons/fa";
+import Icon from "@/app/components/Icon";
+import mongoose from "mongoose";
 import Image from "next/image";
 
 type BlogItem = {
@@ -25,9 +26,19 @@ async function getBlogs(): Promise<BlogItem[]> {
 
   const docs = await Blog.find()
     .sort({ createdAt: -1, isPublished: -1 })
-    .lean();
+    .lean() as unknown as Array<{
+      _id: mongoose.Types.ObjectId;
+      slug?: string;
+      title: string;
+      description: string;
+      thumbnail?: string | null;
+      createdAt?: Date | string;
+      views?: number;
+      readingTime?: number;
+      tags?: string[];
+    }>;
 
-  return docs.map((d: any) => ({
+  return docs.map((d) => ({
     id: String(d._id),
     slug: d.slug,
     title: d.title,
@@ -50,7 +61,7 @@ function BlogCard({ blog, index }: { blog: BlogItem; index: number }) {
         
         {isFeatured && (
           <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 bg-gradient-to-r from-primary to-secondary text-primary-foreground px-2.5 py-1 rounded-full text-xs font-semibold shadow-md">
-            <FaFire className="text-xs" />
+            <Icon icon="fa-solid:fire" className="text-xs" />
             <span>Featured</span>
           </div>
         )}
@@ -84,7 +95,7 @@ function BlogCard({ blog, index }: { blog: BlogItem; index: number }) {
           ) : (
             <div className={`${isFeatured ? 'md:w-2/5' : 'w-full'} h-40 bg-muted/30 flex items-center justify-center flex-shrink-0`}>
               <div className="text-center">
-                <FaBookOpen className="w-8 h-8 text-muted-foreground/50 mx-auto mb-1" />
+                <Icon icon="fa-solid:book-open" className="w-8 h-8 text-muted-foreground/50 mx-auto mb-1" />
                 <span className="text-xs text-muted-foreground">{blog.title}</span>
               </div>
             </div>
@@ -94,16 +105,16 @@ function BlogCard({ blog, index }: { blog: BlogItem; index: number }) {
             <div className="flex-1 space-y-2">
               <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                 <div className="flex items-center gap-1 bg-muted/30 px-2 py-0.5 rounded-full">
-                  <FaCalendarAlt className="text-[10px]" />
+                  <Icon icon="fa-solid:calendar-alt" className="text-[10px]" />
                   <time>{blog.createdAt ? format(new Date(blog.createdAt), "MMM d") : ''}</time>
                 </div>
                 <div className="flex items-center gap-1 bg-muted/30 px-2 py-0.5 rounded-full">
-                  <FaClock className="text-[10px]" />
+                  <Icon icon="fa-solid:clock" className="text-[10px]" />
                   <span>{blog.readingTime} min</span>
                 </div>
                 {blog.views > 0 && (
                   <div className="flex items-center gap-1 bg-muted/30 px-2 py-0.5 rounded-full">
-                    <FaEye className="text-[10px]" />
+                    <Icon icon="fa-solid:eye" className="text-[10px]" />
                     <span>{blog.views > 999 ? `${(blog.views/1000).toFixed(1)}k` : blog.views}</span>
                   </div>
                 )}
@@ -134,7 +145,7 @@ function BlogCard({ blog, index }: { blog: BlogItem; index: number }) {
               
               <div className="flex items-center gap-1 text-primary text-sm font-medium">
                 <span>Read</span>
-                <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform" />
+                <Icon icon="fa-solid:arrow-right" className="text-xs group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
           </div>
@@ -200,9 +211,9 @@ export default async function BlogPage() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="w-20 h-20 bg-base-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FaBookOpen className="w-10 h-10 text-muted-foreground/50" />
-              </div>
+                <div className="w-20 h-20 bg-base-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                 <Icon icon="fa-solid:book-open" className="text-3xl text-muted-foreground/50" />
+                </div>
               <h3 className="text-xl font-bold text-foreground mb-2">No articles yet</h3>
               <p className="text-muted-foreground max-w-md mx-auto text-sm">
                 We&apos;re working on creating amazing content for you. Check back soon!
@@ -216,3 +227,11 @@ export default async function BlogPage() {
     </div>
   );
 }
+
+
+
+
+export const metadata = {
+  title: 'Trading Blog - AI, Crypto & Market Analysis',
+    description: 'Latest insights on AI trading, market trends, signal strategies, and cryptocurrency analysis from Fariboorz AI experts.',
+};

@@ -3,7 +3,7 @@ import userModel from "@/app/models/userModel";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { connectDB } from "@/app/db";
-import clientPromise from "./MongoDbClient"; // مسیر درست رو چک کن
+import clientPromise from "./MongoDbClient"; 
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 
 export const authOptions: AuthOptions = {
@@ -30,7 +30,7 @@ export const authOptions: AuthOptions = {
         const isValid = await bcrypt.compare(password, user.password);
         if (!isValid) throw new Error("CREDENTIALS_MATCH_ERROR");
 
-        // اطلاعات ضروری کاربر رو برگردون
+      
         return {
           id: user._id.toString(),
           email: user.email,
@@ -65,7 +65,7 @@ export const authOptions: AuthOptions = {
       return !!user;
     },
 
-    // فقط موقع لاگین اطلاعات رو توی JWT ذخیره کن
+   
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;

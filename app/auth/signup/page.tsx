@@ -39,7 +39,6 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center p-4 relative">
- 
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(220,38,38,0.1),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(220,38,38,0.05),transparent_50%)]" />
 
@@ -248,6 +247,9 @@ const Signup = () => {
                     "Create Account"
                   )}
                 </Button>
+                  <span className="block mt-2 text-muted-foreground text-xs">
+                By signing up, you agree to our Terms of Service and Privacy Policy.
+              </span>
               </motion.div>
             </form>
 
@@ -277,6 +279,9 @@ const Signup = () => {
               <Link href="/auth/signin" className="text-red-600 hover:text-red-500 font-medium transition-colors">
                 Sign in
               </Link>
+                <span className="block mt-2 text-muted-foreground text-xs">
+                Back to <Link href="/" className="text-red-600 hover:text-red-500 font-medium transition-colors">Home Page</Link>
+              </span>
             </motion.div>
           </CardContent>
         </Card>

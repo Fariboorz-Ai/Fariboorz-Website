@@ -2,21 +2,17 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
-import {
-  BsActivity, BsClock, BsWifi, BsWifiOff, BsArrowUpRight, BsArrowDownRight,
-  BsServer, BsPlug, BsDatabase, BsCpu, BsMemory, BsExclamationTriangle,
-  BsCheckCircle, BsXCircle, BsCalendar, BsFilter
-} from 'react-icons/bs';
-import api from '../../../../utils/api'
+import Icon from '@/app/components/Icon';
+import api from '@/utils/api'
 import {
   Card, CardContent, CardHeader, CardTitle
-} from '../../../components/ui/Card';
-import { Button } from '../../../components/ui/Button';
-import { Badge } from '../../../components/ui/Badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/Tabs';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/Table';
-import { Skeleton } from '../../../components/ui/Skeleton';
-import Sidebar from '../../../components/Sidebar';
+} from '@/app/components/ui/Card';
+import { Button } from '@/app/components/ui/Button';
+import { Badge } from '@/app/components/ui/Badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/Tabs';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/app/components/ui/Table';
+import { Skeleton } from '@/app/components/ui/Skeleton';
+import Sidebar from '@/app/components/Sidebar';
 import { useSession } from "next-auth/react";
 import { redirect } from 'next/navigation';
 
@@ -110,18 +106,18 @@ export default function StatusPage() {
     }
     if (signal === 'buy') {
       return <Badge className="bg-success/20 text-success text-xs flex items-center gap-1">
-        <BsArrowUpRight className="w-3 h-3" /> Buy
+        <Icon icon="fa-solid:arrow-up-right" className="w-3 h-3" /> Buy
       </Badge>;
     }
     return <Badge className="bg-error/20 text-error text-xs flex items-center gap-1">
-      <BsArrowDownRight className="w-3 h-3" /> Sell
+      <Icon icon="fa-solid:arrow-down-right" className="w-3 h-3" /> Sell
     </Badge>;
   };
 
   const getConnectionStatus = (conn: any) => {
     return conn.status.isConnected ? 
-      <Badge className="bg-success/20 text-success text-xs"><BsWifi className="w-3 h-3 mr-1" />Connected</Badge> :
-      <Badge className="bg-error/20 text-error text-xs"><BsWifiOff className="w-3 h-3 mr-1" />Disconnected</Badge>;
+      <Badge className="bg-success/20 text-success text-xs"><Icon icon="fa-solid:wifi" className="w-3 h-3 mr-1" />Connected</Badge> :
+      <Badge className="bg-error/20 text-error text-xs"><Icon icon="fa-solid:wifi-slash" className="w-3 h-3 mr-1" />Disconnected</Badge>;
   };
 
   return (
@@ -140,22 +136,22 @@ export default function StatusPage() {
      
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <BsActivity className="w-4 h-4 text-primary" />
+            <Icon icon="fa-solid:chart-line" className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium">Auto-refresh: 10s</span>
           </div>
           <Button onClick={fetchAll} size="sm" className="ml-auto">
-            <BsCalendar className="w-4 h-4 mr-2" /> Refresh Now
+            <Icon icon="fa-solid:calendar" className="w-4 h-4 mr-2" /> Refresh Now
           </Button>
         </div>
 
       
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: "Recent Signals", value: status?.recentSignals.length || 0, icon: BsActivity, color: "text-info" },
-            { label: "Active Connections", value: wsStatus?.totalConnections || 0, icon: BsWifi, color: "text-success" },
-            { label: "Private WS", value: privateWsStatus?.data.activeConnections || 0, icon: BsPlug, color: "text-accent" },
-            { label: "Uptime", value: status?.systemInfo.uptime ? formatUptime(status.systemInfo.uptime) : 'N/A', icon: BsClock, color: "text-primary" },
-          ].map((item, i) => (
+            { label: "Recent Signals", value: status?.recentSignals.length || 0, icon: 'fa-solid:chart-line', color: "text-info" },
+            { label: "Active Connections", value: wsStatus?.totalConnections || 0, icon: 'fa-solid:wifi', color: "text-success" },
+            { label: "Private WS", value: privateWsStatus?.data.activeConnections || 0, icon: 'fa-solid:plug', color: "text-accent" },
+            { label: "Uptime", value: status?.systemInfo.uptime ? formatUptime(status.systemInfo.uptime) : 'N/A', icon: 'fa-solid:clock', color: "text-primary" },
+          ].map((item: { label: string; value: string | number; icon: string; color: string }, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
               <Card className="bg-card/80 backdrop-blur border-border/50">
                 <CardContent className="p-5">
@@ -164,7 +160,7 @@ export default function StatusPage() {
                       <p className="text-sm text-muted-foreground">{item.label}</p>
                       <p className={`text-2xl font-bold ${item.color}`}>{item.value}</p>
                     </div>
-                    <item.icon className={`w-8 h-8 ${item.color}`} />
+                    <Icon icon={item.icon} className={`w-8 h-8 ${item.color}`} />
                   </div>
                 </CardContent>
               </Card>
@@ -186,8 +182,8 @@ export default function StatusPage() {
             <Card className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="flex items-center justify-between text-foreground">
-                  <span className="flex items-center gap-2">
-                    <BsActivity className="w-5 h-5 text-primary" /> Recent Signals
+                    <span className="flex items-center gap-2">
+                    <Icon icon="fa-solid:chart-line" className="w-5 h-5 text-primary" /> Recent Signals
                   </span>
                   <Badge variant="outline" className="text-xs border-border text-foreground">
                     {status?.timeframes.join(', ')} timeframes
@@ -249,8 +245,8 @@ export default function StatusPage() {
              
               <Card className="bg-card border-border">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-foreground">
-                    <BsWifi className="w-5 h-5 text-success" /> Public WebSockets
+                    <CardTitle className="flex items-center gap-2 text-foreground">
+                    <Icon icon="fa-solid:wifi" className="w-5 h-5 text-success" /> Public WebSockets
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -282,7 +278,7 @@ export default function StatusPage() {
               <Card className="bg-card border-border">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-foreground">
-                    <BsPlug className="w-5 h-5 text-accent" /> Private WebSockets
+                    <Icon icon="fa-solid:plug" className="w-5 h-5 text-accent" /> Private WebSockets
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -318,8 +314,8 @@ export default function StatusPage() {
           <TabsContent value="engine">
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-foreground">
-                  <BsServer className="w-5 h-5 text-primary" /> Strategy Engine
+                  <CardTitle className="flex items-center gap-2 text-foreground">
+                  <Icon icon="fa-solid:server" className="w-5 h-5 text-primary" /> Strategy Engine
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -354,9 +350,9 @@ export default function StatusPage() {
           <TabsContent value="system">
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-foreground">
-                  <BsCpu className="w-5 h-5 text-primary" /> System Information
-                </CardTitle>
+                  <CardTitle className="flex items-center gap-2 text-foreground">
+                    <Icon icon="fa-solid:microchip" className="w-5 h-5 text-primary" /> System Information
+                  </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-foreground">

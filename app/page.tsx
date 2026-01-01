@@ -11,19 +11,15 @@ import {
   BsGlobe, 
   BsCpu,
   BsArrowRight,
-  BsPlayFill,
-  BsStarFill,
 } from "react-icons/bs";
 import Header from "./header";
 import Footer from "./footer";
-import { Button } from "./components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/Card";
-import Icon from "./components/Icon";
-import PricingSection from "./components/PricingSection";
-import FloatingActionButton from "./components/FloatingActionButton";
-
-import { NotificationContainer } from "./components/Notification";
-import CookieConsent from "./components/CookieConsent";
+import { Button } from "@/app/components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/Card";
+import Icon from "@/app/components/Icon";
+import FloatingActionButton from "@/app/components/FloatingActionButton";
+import { NotificationContainer } from "@/app/components/Notification";
+import CookieConsent from "@/app/components/CookieConsent";
 
 
 export default function Home() {
@@ -38,72 +34,48 @@ export default function Home() {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   const stats = [
-    { value: "0.37ms", label: "Avg. Execution", icon: BsLightningCharge, color: "text-red-500" },
-    { value: "99.99%", label: "Uptime", icon: BsShieldLock, color: "text-green-500" },
-    { value: "24/7", label: "Monitoring", icon: BsRocket, color: "text-red-600" },
-    { value: "50M+", label: "Trades/Day", icon: BsGraphUp, color: "text-red-700" },
+    { value: "0.37ms", label: "Avg. Execution", icon: "bi:lightning-charge", color: "text-red-500" },
+    { value: "99.99%", label: "Uptime", icon: "bi:shield-lock", color: "text-green-500" },
+    { value: "24/7", label: "Monitoring", icon: "bi:rocket", color: "text-red-600" },
+    { value: "50M+", label: "Trades/Day", icon: "bi:graph-up", color: "text-red-700" },
   ];
 
   const features = [
     {
-      icon: BsCpu,
+      icon: 'bi:cpu',
       title: "Advanced AI Engine",
       description: "Next-generation algorithms powered by advanced AI for unprecedented trading accuracy",
       gradient: "from-red-600 to-red-700"
     },
     {
-      icon: BsShieldLock,
+      icon: "bi:shield-lock",
       title: "Military Security",
       description: "Multi-layer encryption with cold wallet integration and real-time threat detection",
       gradient: "from-red-700 to-red-800"
     },
     {
-      icon: BsLightningCharge,
+      icon: "bi:lightning-charge",
       title: "Real-Time Execution",
       description: "Lightning-fast trade execution engine with sub-millisecond latency",
       gradient: "from-red-600 to-red-700"
     },
     {
-      icon: BsGlobe,
+      icon: "bi:globe",
       title: "Global Markets",
       description: "Access to 100+ global markets with advanced liquidity aggregation",
       gradient: "from-red-700 to-red-800"
     },
     {
-      icon: BsGraphUp,
+      icon: "bi:graph-up",
       title: "AI Analytics",
       description: "Advanced AI-powered market analysis and predictive modeling",
       gradient: "from-red-600 to-red-700"
     },
     {
-      icon: BsRocket,
+      icon: "bi:rocket",
       title: "Auto Scaling",
       description: "Intelligent portfolio management with dynamic risk adjustment",
       gradient: "from-red-700 to-red-800"
-    }
-  ];
-
-  const testimonials = [
-    {
-      name: "Alex Chen",
-      role: "Professional Trader",
-      content: "Fariboorz has revolutionized my trading strategy. The AI insights are incredibly accurate.",
-      rating: 5,
-              avatar: "/images/avatar1.jpg"
-    },
-    {
-      name: "Sarah Johnson",
-      role: "Crypto Investor",
-      content: "The automated trading features have saved me hours every day. Highly recommended!",
-      rating: 5,
-              avatar: "/images/avatar2.jpg"
-    },
-    {
-      name: "Michael Rodriguez",
-      role: "Hedge Fund Manager",
-      content: "The advanced algorithms provide an edge that's simply unmatched in the market.",
-      rating: 5,
-              avatar: "/images/avatar3.jpg"
     }
   ];
 
@@ -171,7 +143,7 @@ export default function Home() {
                   <Button className="relative overflow-hidden bg-gradient-to-r from-red-600 to-red-700 hover:from-red-600/90 hover:to-red-700/90 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-red-500/25 transition-all duration-300 group">
                     <Link href="/auth/signup" className="relative z-10 flex items-center gap-2">
                       Start Now
-                      <BsArrowRight className="group-hover:translate-x-1 transition-transform duration-200" />
+                      <Icon icon="bi:arrow-right" className="group-hover:translate-x-1 transition-transform duration-200" />
                     </Link>
                     <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-700/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </Button>
@@ -193,7 +165,7 @@ export default function Home() {
                       transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
                       className="bg-card/50 backdrop-blur-sm p-4 rounded-xl border border-border/50 hover:border-red-600/30 transition-all duration-300 group"
                     >
-                      <stat.icon className={`text-2xl mb-2 ${stat.color} group-hover:scale-110 transition-transform duration-300`} />
+                      <Icon icon={stat.icon} className={`text-2xl mb-2 ${stat.color} group-hover:scale-110 transition-transform duration-300`} />
                       <div className="text-xl font-bold text-foreground">{stat.value}</div>
                       <div className="text-sm text-muted-foreground">{stat.label}</div>
                     </motion.div>
@@ -263,7 +235,7 @@ export default function Home() {
                   <Card className="bg-card/50 backdrop-blur-xl border border-border/50 hover:border-red-600/30 transition-all duration-300 h-full">
                     <CardHeader>
                       <div className={`w-12 h-12 bg-gradient-to-br ${feature.gradient} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                        <feature.icon className="text-2xl text-white" />
+                        <Icon icon={feature.icon} className="text-2xl text-white" />
                       </div>
                       <CardTitle className="text-xl font-bold text-foreground">{feature.title}</CardTitle>
                     </CardHeader>
@@ -277,12 +249,6 @@ export default function Home() {
           </div>
         </section>
 
-
-        {/* <PricingSection /> */}
-
-
-    
-
       </div>
       <FloatingActionButton />
       <NotificationContainer />
@@ -291,3 +257,4 @@ export default function Home() {
     </>
   );
 }
+

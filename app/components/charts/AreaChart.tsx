@@ -2,7 +2,21 @@
 
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
-export function AreaChartComponent({ data, height }: { data: any[], height: number }) {
+interface AreaChartProps {
+  data: Array<{ date: string; value: number }>;
+  height?: number;
+  showZeroLine?: boolean;
+  positiveColor?: string;
+  negativeColor?: string;
+}
+
+export function AreaChartComponent({ 
+  data, 
+  height = 300, 
+  showZeroLine = false,
+  positiveColor = '#10b981',
+  negativeColor = '#ef4444'
+}: AreaChartProps){
   return (
     <div className="w-full" style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">

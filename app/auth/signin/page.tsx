@@ -256,6 +256,9 @@ const SignIn = () => {
               <Link href="/auth/signup" className="text-red-600 hover:text-red-500 font-medium transition-colors">
                 Sign up
               </Link>
+                <span className="block mt-2 text-muted-foreground text-xs">
+                Back to <Link href="/" className="text-red-600 hover:text-red-500 font-medium transition-colors">Home Page</Link>
+              </span>
             </motion.div>
           </CardContent>
         </Card>

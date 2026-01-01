@@ -3,7 +3,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/Card";
-import { Shield, Mail, AlertTriangle } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
+import Icon from "@/app/components/Icon";
 import Image from "next/image";
 
 export default function TermsPrivacyPage() {
@@ -58,7 +59,7 @@ export default function TermsPrivacyPage() {
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-red-500/10 rounded-lg">
-                  <AlertTriangle className="h-5 w-5 text-red-600" />
+                  <Icon icon="lucide:alert-triangle" className="text-3xl h-5 w-5 text-red-600" />
                 </div>
                 <h2 className="text-xl font-bold text-foreground">Terms of Service</h2>
               </div>
@@ -105,7 +106,7 @@ export default function TermsPrivacyPage() {
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-red-500/10 rounded-lg">
-                  <Shield className="h-5 w-5 text-red-600" />
+                  <Icon icon="lucide:shield" className="text-2xl text-red-600" />
                 </div>
                 <h2 className="text-xl font-bold text-foreground">Privacy Policy</h2>
               </div>
@@ -156,7 +157,8 @@ export default function TermsPrivacyPage() {
             >
               <div className="flex justify-center mb-4">
                 <div className="p-3 bg-red-500/10 rounded-full">
-                  <Mail className="h-6 w-6 text-red-600" />
+                  <Icon icon="lucide:mail" className="text-3xl h-6 w-6 text-red-600" />
+              
                 </div>
               </div>
               <h2 className="text-xl font-bold mb-2 text-foreground">Contact Us</h2>

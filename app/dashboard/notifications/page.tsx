@@ -3,10 +3,10 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/utils/authOptions";
 import { connectDB } from "@/app/db";
 import notificationModel from "@/app/models/notificationModel";
-import Sidebar from '../../components/Sidebar';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
-import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '../../components/ui/Table';
-import Icon from '../../components/Icon';
+import Sidebar from '@/app/components/Sidebar';
+import { Card, CardHeader, CardTitle, CardContent } from '@/app/components/ui/Card';
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/app/components/ui/Table';
+import Icon from '@/app/components/Icon';
 import { redirect } from "next/navigation";
 import Link from 'next/link';
 
@@ -71,7 +71,7 @@ export default async function NotificationsPage(props: any) {
     redirect('/auth/signin');
   }
   
-  const params = props?.searchParams;
+  const params = await props?.searchParams;
   const page = parseInt((Array.isArray(params?.page) ? params?.page[0] : params?.page) ?? '1', 10) || 1;
   const perPage = 10;
   const data = await getNotificationsData(session.user.id, page, perPage);

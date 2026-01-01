@@ -1,25 +1,25 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Label } from '../../components/ui/Label';
+import { Button } from '@/app/components/ui/Button';
+import { Input } from '@/app/components/ui/Input';
+import { Label } from '@/app/components/ui/Label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '../../components/ui/Select';
+} from '@/app/components/ui/Select';
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent
-} from '../../components/ui/Card';
-import { Switch } from '../../components/ui/Switch';
-import Icon from '../../components/Icon';
-import Sidebar from '../../components/Sidebar';
+} from '@/app/components/ui/Card';
+import { Switch } from '@/app/components/ui/Switch';
+import Icon from '@/app/components/Icon';
+import Sidebar from '@/app/components/Sidebar';
 import { loadUserSettings, saveUserSettings } from './actions';
 
 interface UserSettings {
@@ -127,7 +127,7 @@ export default function SettingsPage() {
 
 
   const exchanges = [
-    { id: 'bitunix', name: 'Bitunix', status: 'Connected' },
+    { id: 'bitunix', name: 'Bitunix', status: 'Available' },
     { id: 'bingx', name: 'BingX', status: 'Available' },
   ];
 
@@ -257,7 +257,7 @@ export default function SettingsPage() {
                             <span className={`text-xs px-2 py-1 rounded-full ${
                               ex.status === 'Connected' 
                                 ? 'bg-success/20 text-success' 
-                                : 'bg-muted/20 text-muted-foreground'
+                                : 'bg-primary/20 text-primary'
                             }`}>
                               {ex.status}
                             </span>

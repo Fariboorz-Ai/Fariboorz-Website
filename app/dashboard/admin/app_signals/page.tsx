@@ -2,21 +2,15 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
-import {
-  BsActivity, BsClock,
-  BsServer, BsDatabase, BsCpu, BsMemory, BsCheckCircle, BsXCircle,
-  BsCalendar, BsArrowRight, BsFilter , BsClockHistory, BsTriangle, BsArrowUp, BsArrowDown, BsMap
-} from 'react-icons/bs';
-import api from '../../../../utils/api'
-import {
-  Card, CardContent, CardHeader, CardTitle
-} from '../../../components/ui/Card';
-import { Button } from '../../../components/ui/Button';
-import { Badge } from '../../../components/ui/Badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/Tabs';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/Table';
-import { Skeleton } from '../../../components/ui/Skeleton';
-import Sidebar from '../../../components/Sidebar';
+import Icon from '@/app/components/Icon';
+import api from '@/utils/api'
+import {Card, CardContent, CardHeader, CardTitle} from '@/app/components/ui/Card';
+import { Button } from '@/app/components/ui/Button';
+import { Badge } from '@/app/components/ui/Badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/Tabs';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/app/components/ui/Table';
+import { Skeleton } from '@/app/components/ui/Skeleton';
+import Sidebar from '@/app/components/Sidebar';
 import { useSession } from "next-auth/react";
 import { redirect } from 'next/navigation';
 
@@ -94,11 +88,11 @@ export default function SignalsPage() {
   const getSignalTypeBadge = (type: 'buy' | 'sell') => {
     return type === 'buy' ? (
       <Badge className="bg-success/15 text-success border border-success/30 text-xs flex items-center gap-1">
-        <BsArrowUp className="w-3 h-3" /> Buy
+        <Icon icon="fa-solid:arrow-up" className="w-3 h-3" /> Buy
       </Badge>
     ) : (
       <Badge className="bg-error/15 text-error border border-error/30 text-xs flex items-center gap-1">
-        <BsArrowDown className="w-3 h-3" /> Sell
+        <Icon icon="fa-solid:arrow-down" className="w-3 h-3" /> Sell
       </Badge>
     );
   };
@@ -119,22 +113,22 @@ export default function SignalsPage() {
       
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <BsActivity className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium">Auto-refresh: 10s</span>
-          </div>
+              <Icon icon="fa-solid:chart-line" className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium">Auto-refresh: 10s</span>
+            </div>
           <Button onClick={fetchData} size="sm" className="ml-auto">
-            <BsCalendar className="w-4 h-4 mr-2" /> Refresh Now
+            <Icon icon="fa-solid:calendar" className="w-4 h-4 mr-2" /> Refresh Now
           </Button>
         </div>
 
        
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: "Total Signals", value: stats?.total || 0, icon: BsDatabase, color: "text-primary" },
-            { label: "Today", value: stats?.today || 0, icon: BsClockHistory, color: "text-info" },
-            { label: "Pending", value: stats?.pending || 0, icon: BsTriangle, color: "text-warning" },
-            { label: "Queue Length", value: tradeManager?.data.queueLength || 0, icon: BsMap, color: "text-accent" },
-          ].map((item, i) => (
+            { label: "Total Signals", value: stats?.total || 0, icon: 'fa-solid:database', color: "text-primary" },
+            { label: "Today", value: stats?.today || 0, icon: 'fa-solid:clock', color: "text-info" },
+            { label: "Pending", value: stats?.pending || 0, icon: 'fa-solid:triangle-exclamation', color: "text-warning" },
+            { label: "Queue Length", value: tradeManager?.data.queueLength || 0, icon: 'fa-solid:map', color: "text-accent" },
+          ].map((item: { label: string; value: number; icon: string; color: string }, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
               <Card className="bg-card/90 backdrop-blur-sm border-border/50 hover:border-primary/50 transition-colors">
                 <CardContent className="p-5">
@@ -143,7 +137,7 @@ export default function SignalsPage() {
                       <p className="text-sm text-muted-foreground">{item.label}</p>
                       <p className={`text-2xl font-bold ${item.color}`}>{item.value}</p>
                     </div>
-                    <item.icon className={`w-8 h-8 ${item.color} opacity-80`} />
+                    <Icon icon={item.icon} className={`w-8 h-8 ${item.color} opacity-80`} />
                   </div>
                 </CardContent>
               </Card>
@@ -154,9 +148,9 @@ export default function SignalsPage() {
        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Card className="bg-card/90 backdrop-blur-sm border-border/50">
-            <CardHeader className="pb-3">
+                <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
-                <BsArrowUp className="w-5 h-5 text-emerald-400" /> Buy Signals
+                <Icon icon="fa-solid:arrow-up" className="w-5 h-5 text-emerald-400" /> Buy Signals
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -168,9 +162,9 @@ export default function SignalsPage() {
           </Card>
 
           <Card className="bg-card/90 backdrop-blur-sm border-border/50">
-            <CardHeader className="pb-3">
+              <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
-                <BsArrowDown className="w-5 h-5 text-rose-400" /> Sell Signals
+                <Icon icon="fa-solid:arrow-down" className="w-5 h-5 text-rose-400" /> Sell Signals
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -194,8 +188,8 @@ export default function SignalsPage() {
             <Card className="bg-card/90 backdrop-blur-sm border-border/50">
               <CardHeader>
                 <CardTitle className="flex items-center justify-between text-foreground">
-                  <span className="flex items-center gap-2">
-                    <BsServer className="w-5 h-5 text-primary" /> Trade Execution Engine
+                    <span className="flex items-center gap-2">
+                    <Icon icon="fa-solid:server" className="w-5 h-5 text-primary" /> Trade Execution Engine
                   </span>
                   <Badge variant={tradeManager?.status === 'ok' ? 'default' : 'destructive'} className="text-xs">
                     {tradeManager?.status || 'unknown'}
@@ -205,15 +199,15 @@ export default function SignalsPage() {
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   {[
-                    { label: "Processed", value: tradeManager?.data.processedJobs || 0, icon: BsCheckCircle, color: "text-success" },
-                    { label: "Skipped", value: tradeManager?.data.skippedJobs || 0, icon: BsXCircle, color: "text-warning" },
-                    { label: "Success", value: tradeManager?.data.successfulTrades || 0, icon: BsCheckCircle, color: "text-success" },
-                    { label: "Failed", value: tradeManager?.data.failedTrades || 0, icon: BsXCircle, color: "text-error" },
-                  ].map((item, i) => (
+                    { label: "Processed", value: tradeManager?.data.processedJobs || 0, icon: 'fa-solid:check-circle', color: "text-success" },
+                    { label: "Skipped", value: tradeManager?.data.skippedJobs || 0, icon: 'fa-solid:times-circle', color: "text-warning" },
+                    { label: "Success", value: tradeManager?.data.successfulTrades || 0, icon: 'fa-solid:check-circle', color: "text-success" },
+                    { label: "Failed", value: tradeManager?.data.failedTrades || 0, icon: 'fa-solid:times-circle', color: "text-error" },
+                  ].map((item: { label: string; value: number; icon: string; color: string }, i) => (
                     <div key={i} className="text-center p-3 bg-muted/40 rounded-lg border border-border/30">
                       <p className={`text-2xl font-bold ${item.color}`}>{item.value}</p>
                       <p className="text-xs text-muted-foreground flex items-center justify-center gap-1 mt-1">
-                        <item.icon className="w-3 h-3" /> {item.label}
+                        <Icon icon={item.icon} className="w-3 h-3" /> {item.label}
                       </p>
                     </div>
                   ))}
@@ -221,7 +215,7 @@ export default function SignalsPage() {
 
                 {tradeManager?.data.lastJobAt && (
                   <div className="mt-4 text-xs text-muted-foreground flex items-center gap-2">
-                    <BsClock className="w-3 h-3" />
+                    <Icon icon="fa-solid:clock" className="w-3 h-3" />
                     Last job: {formatTime(tradeManager.data.lastJobAt)}
                   </div>
                 )}

@@ -10,10 +10,11 @@ export default function Footer() {
       { name: "Features", href: "#features" },
       { name: "Pricing", href: "#pricing" },
       { name: "Blog", href: "/blog" },
+      { name: "Signals" , href: "/free-signals" },
+      { name: "System Performance", href: "/performance" },
     ],
     support: [
-      { name: "Status", href: "#status" },
-      { name: "Security", href: "#security" },
+      { name: "Telegram", href: "https://t.me/Fariboorz_ai" },
     ],
     legal: [
       { name: "Privacy Policy", href: "/terms-privacy" },
